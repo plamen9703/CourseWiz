@@ -40,7 +40,7 @@ public class JwtAuthFilter implements ContainerRequestFilter {
             containerRequestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
             return;
         }
-        String token = authHeader.substring("Bearer".length());
+        String token = authHeader.substring("Bearer ".length());
 
         try {
             Claims claims= Jwts.parser()
@@ -50,7 +50,6 @@ public class JwtAuthFilter implements ContainerRequestFilter {
                     .getPayload();
             String userName=claims.getSubject();
             String role = claims.get("role",String.class);
-
             SecurityContext originalContext = containerRequestContext.getSecurityContext();
             JwtSecurityContext securityContext = new JwtSecurityContext(userName, role, originalContext.isSecure());
             containerRequestContext.setSecurityContext(securityContext);

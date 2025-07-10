@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         if (!BCrypt.checkpw(user.getPassword(), exiting.getPassword())){
             throw new UserLoginException("User login failed!");
         }
-        return jwtService.generateToken(user);
+        return jwtService.generateToken(exiting);
     }
 
     private boolean isValidEmail(String input) {

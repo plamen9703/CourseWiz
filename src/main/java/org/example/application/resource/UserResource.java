@@ -69,7 +69,6 @@ public class UserResource {
         }
         String username= parts[0];
         String password= parts[1];
-
         User user =new User();
         user.setPassword(password);
         user.setUsername(username);
@@ -77,7 +76,6 @@ public class UserResource {
             String token = userService.login(user);
             return Response.ok(Collections.singletonMap("token", token)).build();
         }catch (Exception e){
-            System.out.println("UNauth");
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("Invalid credentials")
                     .build();

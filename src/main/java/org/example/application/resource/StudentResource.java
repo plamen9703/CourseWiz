@@ -15,7 +15,7 @@ import java.util.List;
 @Path("students")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed({"adin", "student-admin"})
+@RolesAllowed({"admin", "student-admin"})
 public class StudentResource {
 
     private final StudentService studentService;
