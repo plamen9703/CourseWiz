@@ -5,10 +5,7 @@ import org.example.application.services.interfaces.StudentService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +23,9 @@ public class StudentResource {
     }
     @GET
     public Response getAll(){
+//        if @RolesAllowed not active
+//        String userName = securityContext.getUserPrincipal().getName();
+//        boolean isAdmin = securityContext.isUserInRole("admin");
         return Response.ok(studentService.findAll()).build();
     }
 

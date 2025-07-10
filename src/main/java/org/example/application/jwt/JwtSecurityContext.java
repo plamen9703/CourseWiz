@@ -1,28 +1,28 @@
 package org.example.application.jwt;
 
+import org.example.application.api.User;
+
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 
 public class JwtSecurityContext implements SecurityContext {
 
-    private final String userName;
-    private final String role;
+    private final User user;
     private final boolean isSecure;
-
-    public JwtSecurityContext(String userName, String role, boolean isSecure) {
-        this.userName = userName;
-        this.role = role;
+    public JwtSecurityContext(User user, boolean isSecure) {
+        this.user = user;
         this.isSecure = isSecure;
     }
 
     @Override
     public Principal getUserPrincipal() {
-        return ()->userName;
+        return user;
     }
 
     @Override
     public boolean isUserInRole(String role) {
-        return this.role!=null && this.role.equals(role);
+        String userRole = this.user.getRole();
+        return userRole !=null && userRole.equals(role);
     }
 
     @Override

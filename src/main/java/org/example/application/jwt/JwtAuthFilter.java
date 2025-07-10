@@ -3,6 +3,7 @@ package org.example.application.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import org.example.application.api.User;
 
 import javax.annotation.Priority;
 import javax.crypto.SecretKey;
@@ -50,8 +51,9 @@ public class JwtAuthFilter implements ContainerRequestFilter {
                     .getPayload();
             String userName=claims.getSubject();
             String role = claims.get("role",String.class);
+            User principal=new User(userName, role);
             SecurityContext originalContext = containerRequestContext.getSecurityContext();
-            JwtSecurityContext securityContext = new JwtSecurityContext(userName, role, originalContext.isSecure());
+            JwtSecurityContext securityContext = new JwtSecurityContext(principal, originalContext.isSecure());
             containerRequestContext.setSecurityContext(securityContext);
         } catch (JwtException ex) {
             containerRequestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());

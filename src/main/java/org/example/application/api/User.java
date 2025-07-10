@@ -1,8 +1,10 @@
 package org.example.application.api;
 
+import javax.security.auth.Subject;
+import java.security.Principal;
 import java.sql.Timestamp;
 
-public class User {
+public class User implements Principal {
 
     private Integer id;
     private String username;
@@ -21,6 +23,11 @@ public class User {
     }
 
     public User() {
+    }
+
+    public User(String userName, String role) {
+        this.username=userName;
+        this.role=role;
     }
 
     public Integer getId() {
@@ -85,5 +92,15 @@ public class User {
                 ", role='" + role + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    @Override
+    public String getName() {
+        return username;
+    }
+
+    @Override
+    public boolean implies(Subject subject) {
+        return Principal.super.implies(subject);
     }
 }
