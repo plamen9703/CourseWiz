@@ -25,27 +25,26 @@ public class StudentDAO  implements StudentRepository {
 
     @Override
     public List<Student> findAll() {
-        String sql="SELECT pin, first_name, last_name, time_created FROM public.students;";
+        String sql="SELECT pin, first_name, last_name, time_created FROM coursera.students;";
         return jdbcHelper.query(sql,STUDENT_RESULT_SET_MAPPER);
     }
 
     @Override
-    public Optional<Student> findById(String studentPin) {
-        String sql = "SELECT pin, first_name, last_name, time_created FROM public.students WHERE pin = ?;";
-        return jdbcHelper.querySingle(sql, STUDENT_RESULT_SET_MAPPER, studentPin);
+    public Optional<Student> findById(Student student) {
+        String sql = "SELECT pin, first_name, last_name, time_created FROM coursera.students WHERE pin = ?;";
+        return jdbcHelper.querySingle(sql, STUDENT_RESULT_SET_MAPPER, student.getPin());
     }
 
-    /// TODO: should handle the transaction for updates on this layer!!!!
 
     @Override
-    public void update(String studentPin,Student student) {
-        String sql="UPDATE public.students SET first_name=?, last_name=? WHERE pin=?;";
-        jdbcHelper.update(sql, student.getFirstName(),student.getLastName(), studentPin);
+    public int update(Student student) {
+        String sql="UPDATE coursera.students SET first_name=?, last_name=? WHERE pin=?;";
+        return jdbcHelper.update(sql, student.getFirstName(),student.getLastName(), student.getPin());
     }
 
     @Override
-    public Student create(Student student) {
-        String sql="INSERT INTO public.students(first_name, last_name, time_created) VALUES ( ?, ?, COALESCE(?, CURRENT_TIMESTAMP));";
+    public Student insert(Student student) {
+        String sql="INSERT INTO coursera.students(first_name, last_name, time_created) VALUES ( ?, ?, COALESCE(?, CURRENT_TIMESTAMP));";
         return jdbcHelper.insert(sql,
                 STUDENT_RESULT_SET_MAPPER,
                 student.getFirstName(),
@@ -54,14 +53,14 @@ public class StudentDAO  implements StudentRepository {
     }
 
     @Override
-    public void delete(String studentPin) {
-        String sql = "DELETE FROM public.students WHERE pin=?;";
-        jdbcHelper.update(sql,studentPin);
+    public int delete(Student student) {
+        String sql = "DELETE FROM coursera.students WHERE pin=?;";
+        return jdbcHelper.update(sql,student.getPin());
     }
 
     @Override
-    public boolean existsById(String studentPin) {
-        String sql="SELECT pin, first_name, last_name, time_created FROM public.students WHERE pin = ?;";
-        return jdbcHelper.exists(sql, studentPin);
+    public boolean existsById(Student student) {
+        String sql="SELECT pin, first_name, last_name, time_created FROM coursera.students WHERE pin = ?;";
+        return jdbcHelper.exists(sql, student.getPin());
     }
 }

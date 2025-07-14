@@ -1,4 +1,4 @@
-package org.example.application.jwt;
+package org.example.application.services.auth.jwt;
 
 import javax.ws.rs.NameBinding;
 import java.lang.annotation.Retention;

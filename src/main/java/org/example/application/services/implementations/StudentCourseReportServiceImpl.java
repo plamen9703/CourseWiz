@@ -1,10 +1,9 @@
-package org.example.application.services;
+package org.example.application.services.implementations;
 
 import org.example.application.api.StudentCourseReport;
 import org.example.application.repository.StudentCourseReportRepository;
 import org.example.application.services.interfaces.StudentCourseReportService;
 
-import java.sql.Date;
 import java.util.List;
 
 public class StudentCourseReportServiceImpl implements StudentCourseReportService {

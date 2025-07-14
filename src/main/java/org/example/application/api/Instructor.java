@@ -3,11 +3,14 @@ package org.example.application.api;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
-public class Instructor {
-    private int id;
+public class Instructor implements Profile{
+    private Integer id;
+    @Size(max = 100, message = "First name must be at most 100 characters.")
     private String firstName;
+    @Size(max = 100, message = "Last name must be at most 100 characters.")
     private String lastName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private Timestamp timeCreated;
@@ -15,7 +18,7 @@ public class Instructor {
     public Instructor() {
     }
 
-    public Instructor(int id, String firstName, String lastName, Timestamp timeCreated) {
+    public Instructor(Integer id, String firstName, String lastName, Timestamp timeCreated) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -23,26 +26,30 @@ public class Instructor {
     }
 
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
+    @Override
     public String getFirstName() {
         return firstName;
     }
 
+    @Override
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    @Override
     public String getLastName() {
         return lastName;
     }
 
+    @Override
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }

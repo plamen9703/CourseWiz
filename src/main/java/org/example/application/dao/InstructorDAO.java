@@ -24,36 +24,36 @@ public class InstructorDAO implements InstructorRepository {
 
     @Override
     public List<Instructor> findAll() {
-        return jdbcHelper.query("SELECT id, first_name, last_name, time_created FROM public.instructors;", INSTRUCTOR_RESULT_SET_MAPPER);
+        return jdbcHelper.query("SELECT id, first_name, last_name, time_created FROM coursera.instructors;", INSTRUCTOR_RESULT_SET_MAPPER);
     }
 
     @Override
-    public Optional<Instructor> findById(int instructorId) {
-        String sql="SELECT id, first_name, last_name, time_created FROM public.instructors WHERE id=?;";
-        return jdbcHelper.querySingle(sql, INSTRUCTOR_RESULT_SET_MAPPER,instructorId);
+    public Optional<Instructor> findById(Instructor instructor) {
+        String sql="SELECT id, first_name, last_name, time_created FROM coursera.instructors WHERE id=?;";
+        return jdbcHelper.querySingle(sql, INSTRUCTOR_RESULT_SET_MAPPER,instructor.getId());
     }
 
     @Override
-    public Instructor create(Instructor instructor) {
-        String sql="INSERT INTO public.instructors( first_name, last_name, time_created) VALUES (?, ?, COALESCE(?, CURRENT_TIMESTAMP));";
+    public Instructor insert(Instructor instructor) {
+        String sql="INSERT INTO coursera.instructors( first_name, last_name, time_created) VALUES (?, ?, COALESCE(?, CURRENT_TIMESTAMP));";
         return jdbcHelper.insert(sql,INSTRUCTOR_RESULT_SET_MAPPER, instructor.getFirstName(),instructor.getLastName(), instructor.getTimeCreated());
     }
 
     @Override
-    public int update(Integer instructorId,Instructor instructor) {
-        String sql="UPDATE public.instructors SET  first_name=?, last_name=? WHERE id=?;";
-        return jdbcHelper.update(sql, instructor.getFirstName(), instructor.getLastName(), instructorId);
+    public int update(Instructor instructor) {
+        String sql="UPDATE coursera.instructors SET  first_name=?, last_name=? WHERE id=?;";
+        return jdbcHelper.update(sql, instructor.getFirstName(), instructor.getLastName(), instructor.getId());
     }
 
     @Override
-    public int delete(Integer instructorId) {
-        String sql="DELETE FROM public.instructors WHERE id=?;";
-        return jdbcHelper.update(sql,instructorId);
+    public int delete(Instructor instructor) {
+        String sql="DELETE FROM coursera.instructors WHERE id=?;";
+        return jdbcHelper.update(sql,instructor.getId());
     }
 
     @Override
-    public boolean existsById(int instructorId) {
-        String sql= "SELECT id, first_name, last_name, time_created FROM public.instructors WHERE id=?;";
-        return jdbcHelper.exists(sql,instructorId);
+    public boolean existsById(Instructor instructor) {
+        String sql= "SELECT id, first_name, last_name, time_created FROM coursera.instructors WHERE id=?;";
+        return jdbcHelper.exists(sql,instructor.getId());
     }
 }

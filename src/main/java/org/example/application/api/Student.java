@@ -2,11 +2,16 @@ package org.example.application.api;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
-public class Student {
+public class Student implements Profile {
+    @Pattern(regexp = "^STU\\d{7}$", message = "Pin must start with 'STU' and be followed by 7 digits.")
     private String pin;
+    @Size(max = 50, message = "First name must be at most 50 characters.")
     private String firstName;
+    @Size(max = 50, message = "Last name must be at most 50 characters.")
     private String lastName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private Timestamp timeCreated;
@@ -29,18 +34,22 @@ public class Student {
         this.pin = pin;
     }
 
+    @Override
     public String getFirstName() {
         return firstName;
     }
 
+    @Override
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    @Override
     public String getLastName() {
         return lastName;
     }
 
+    @Override
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }

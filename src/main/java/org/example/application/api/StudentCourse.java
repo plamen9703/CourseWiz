@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Date;
 
 public class StudentCourse {
-
     private String studentPin;
-
     private Integer courseId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date completionDate;

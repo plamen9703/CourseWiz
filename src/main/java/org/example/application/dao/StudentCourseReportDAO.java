@@ -25,7 +25,7 @@ public class StudentCourseReportDAO implements StudentCourseReportRepository {
     }
 
     public List<StudentCourseReport> getStudentCourseReport(List<String> studentPins, Integer minimalCredit, String startDate, String endDate){
-        String sql="SELECT * FROM get_student_course_report(?::varchar[], ?, ?, ?);";
+        String sql="SELECT * FROM coursera.get_student_course_report(?::varchar[], ?, ?, ?);";
         return jdbcHelper.query(sql, STUDENT_COURSE_REPORT_RESULT_SET_MAPPER,
                 studentPins==null || studentPins.isEmpty() ? null:
                 "{"+String.join(",", studentPins)+"}",

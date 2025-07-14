@@ -7,6 +7,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.application.api.StudentCourseReport;
 import org.example.application.services.interfaces.StudentCourseReportService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Path("/reports")
 @Produces("text/csv")
+@RolesAllowed({"course-admin", "instructor-admin","student-admin"})
 public class StudentCourseReportResource {
     private final StudentCourseReportService studentCourseReportService;
     private static final String[] STUDENT_HEADERS = {

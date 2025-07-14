@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION get_student_course_report(
+CREATE OR REPLACE FUNCTION coursera.get_student_course_report(
 	p_student_pins character varying[],
 	p_min_credit integer,
 	p_start_date date,
@@ -23,10 +23,10 @@ BEGIN
             c.credit,
             CONCAT(i.first_name, ' ', i.last_name)::VARCHAR AS instructor_name,
             sc.completion_date
-        FROM students s
-        JOIN student_course_xref sc ON s.pin = sc.student_pin
-        JOIN courses c ON c.id = sc.course_id
-        JOIN instructors i ON c.instructor_id = i.id
+        FROM coursera.students s
+        JOIN coursera.student_course_xref sc ON s.pin = sc.student_pin
+        JOIN coursera.courses c ON c.id = sc.course_id
+        JOIN coursera.instructors i ON c.instructor_id = i.id
        WHERE sc.completion_date IS NOT NULL AND
     		(p_student_pins IS NULL OR s.pin = ANY(p_student_pins)) AND
     		(p_start_date IS NULL OR p_end_date IS NULL OR sc.completion_date BETWEEN p_start_date AND p_end_date)
@@ -36,7 +36,7 @@ BEGIN
         SELECT
             pin,
             SUM(credit)::INT AS total_credit
-        FROM report_data
+        FROM coursera.report_data
         GROUP BY pin
     )
     SELECT

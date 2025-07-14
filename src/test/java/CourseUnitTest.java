@@ -5,7 +5,7 @@ import org.example.application.dao.InstructorDAO;
 import org.example.application.repository.CourseRepository;
 import org.example.application.repository.InstructorRepository;
 import org.example.application.exceptions.DuplicateEntityException;
-import org.example.application.services.CourseServiceImpl;
+import org.example.application.services.implementations.CourseServiceImpl;
 import org.example.application.services.interfaces.CourseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

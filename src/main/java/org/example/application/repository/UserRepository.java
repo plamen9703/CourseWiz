@@ -4,19 +4,14 @@ import org.example.application.api.User;
 
 import java.util.Optional;
 
-public interface UserRepository {
+public interface UserRepository extends JdbcRepository<User>{
 
-    Optional<User> findByUsername(String userName);
+    Optional<User> findByUsername(User user);
 
-    Optional<User> findByEmail(String email);
+    Optional<User> findByEmail(User user);
 
-    boolean existsByUserName(String userName);
+    boolean existsByUsername(User user);
 
-    boolean existsByEmail(String email);
+    boolean existsByEmail(User user);
 
-    User create(User user);
-
-    void update(User user);
-
-    void delete(User user);
 }

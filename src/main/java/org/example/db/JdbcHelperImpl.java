@@ -35,6 +35,7 @@ public class JdbcHelperImpl implements JdbcHelper{
                 }
             }
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             throw new RuntimeException("Query failed", e);
         }
         return results;

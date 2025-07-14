@@ -9,15 +9,18 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.example.application.dao.*;
 import org.example.application.exceptions.maps.*;
-import org.example.application.jwt.JwtAuthFilter;
-import org.example.application.jwt.JwtService;
+import org.example.application.services.auth.AuthServices;
+import org.example.application.services.auth.jwt.JwtAuthFilter;
 import org.example.application.repository.*;
 import org.example.application.resource.*;
-import org.example.application.services.*;
+import org.example.application.services.implementations.*;
 import org.example.application.services.interfaces.*;
 import org.example.db.JdbcHelper;
 import org.example.db.JdbcHelperImpl;
 import org.flywaydb.core.Flyway;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -25,6 +28,8 @@ import javax.ws.rs.ext.ExceptionMapper;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class CoursewizApplication extends Application<CoursewizConfiguration> {
+
+    private static final Logger log= LoggerFactory.getLogger(CoursewizApplication.class);
 
     public static void main(String[] args) throws Exception {
         new CoursewizApplication().run("server", "config.yml");
@@ -91,15 +96,15 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
         UserRepository userRepository=new UserDAO(jdbcHelper);
 
         //services
-        JwtService jwtService = new JwtService();
-        jersey.register(new JwtAuthFilter(jwtService.getKey()));
+        jersey.register(new JwtAuthFilter(AuthServices.JWT_SERVICE.getKey()));
+        jersey.register(RolesAllowedDynamicFeature.class);
 
         CourseService courseService = new CourseServiceImpl(courseRepository, instructorRepository);
         InstructorService instructorService = new InstructorServiceImpl(instructorRepository);
         StudentService studentService = new StudentServiceImpl(studentRepository);
         StudentCourseService studentCourseService = new StudentCourseServiceImpl( studentCourseRepository);
         StudentCourseReportService studentCourseReportService=new StudentCourseReportServiceImpl(studentCourseReportRepository);
-        UserService userService=new UserServiceImpl(userRepository, jwtService);
+        UserService userService=new UserServiceImpl(userRepository);
 
         //resources
         StudentResource studentResource = new StudentResource(studentService);
@@ -117,4 +122,32 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
         jersey.register(studentCourseReportResource);
         jersey.register(userResource);
     }
+
+//     TEST: test getting permission set
+
+//    public static Set<String> getPermission(ManagedDataSource dataSource){
+//        String sql = "SELECT ARRAY_AGG(p.name) AS permissions\n" +
+//                "FROM permissions p\n" +
+//                "JOIN role_permissions rp ON p.id = rp.permission_id\n" +
+//                "WHERE rp.role_id = ?;\n";
+//        try(Connection conn=dataSource.getConnection();
+//            PreparedStatement stmt = conn.prepareStatement(sql)) {
+//            stmt.setInt(1, 6);
+//
+//            ResultSet rs = stmt.executeQuery();
+//            Set<String> permissions = new HashSet<>();
+//
+//            if (rs.next()) {
+//
+//
+//            }
+//            return permissions;
+//        } catch (Exception e) {
+//            return null;
+//        }
+//
+//    }
+
+
+
 }

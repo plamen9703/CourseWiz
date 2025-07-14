@@ -12,7 +12,7 @@ import java.util.List;
 @Path("students")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed({"admin", "student-admin"})
+@RolesAllowed({"student-admin"})
 public class StudentResource {
 
     private final StudentService studentService;
@@ -22,48 +22,70 @@ public class StudentResource {
         this.studentService = studentService;
     }
     @GET
-    public Response getAll(){
+    @RolesAllowed({"instructor", "course-admin"})
+    public Response findAll(){
+//        Needed @Contex SecurityPrincipal securityprincipal in method args
+//        User user=(User)securityContext.getUserPrincipal();
 //        if @RolesAllowed not active
 //        String userName = securityContext.getUserPrincipal().getName();
 //        boolean isAdmin = securityContext.isUserInRole("admin");
-        return Response.ok(studentService.findAll()).build();
+
+        List<Student> students = studentService.findAll();
+        return Response.ok(students).build();
     }
 
     @GET
     @Path("/{pin}")
+    @RolesAllowed({"student-admin","instructor","instructor-admin"})
     public Response findById(@PathParam("pin") String pin){
-        return studentService.findById(pin)
-                .map( student -> Response.ok(student).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+        Student student=new Student();
+        student.setPin(pin);
+        Student found = studentService.findById(student);
+        return Response
+                .ok(found)
+                .build();
     }
 
     @POST
     @Path("/batch")
-    public Response saveAll(List<Student> students){
-        List<Student> created=new ArrayList<>();
+    @RolesAllowed({"student-admin", "course-admin"})
+    public Response saveAll(List<Student> students, @Context UriInfo uriInfo){
+        List<URI> locations=new ArrayList<>();
         for (Student student: students){
-            created.add(studentService.create(student));
+            Student created = studentService.create(student);
+            URI location=uriInfo.getAbsolutePathBuilder().path(created.getPin()).build();
+            locations.add(location);
         }
-        return Response.status(Response.Status.CREATED).entity(created).build();
+        return Response
+                .status(Response.Status.CREATED)
+                .entity(locations)
+                .build();
     }
 
     @POST
+    @RolesAllowed({"student-admin","course-admin", "instructor-admin"})
     public Response save(Student student, @Context UriInfo uriInfo){
-        Student saved = studentService.create(student);
-        URI location =uriInfo.getAbsolutePathBuilder()
-                .path(saved.getPin()).build();
-        return Response.created(location).entity(saved).build();
+        Student created = studentService.create(student);
+        URI location = uriInfo.getAbsolutePathBuilder()
+                .path(created.getPin())
+                .build();
+        return Response.created(location).build();
     }
 
     @PUT // do I replace it with patch ????
-    public Response update(Student student){
-        studentService.update(student.getPin(),student);
+    @RolesAllowed({"student-admin", "student"})
+    public Response update(@Context SecurityContext securityContext , Student student){
+        studentService.update(student);
+
+        // TEST: test if student has changed
+        System.out.println(studentService.findById(student));
         return Response.noContent().build();
     }
 
     @DELETE
+    @RolesAllowed({"student-admin","course-admin", "instructor-admin"})
     public Response delete(Student student){
-        studentService.delete(student.getPin());
+        studentService.delete(student);
         return Response.noContent().build();
     }
 

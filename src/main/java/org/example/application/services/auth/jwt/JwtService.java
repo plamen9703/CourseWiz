@@ -1,4 +1,4 @@
-package org.example.application.jwt;
+package org.example.application.services.auth.jwt;
 
 
 import io.jsonwebtoken.Jwts;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class JwtService {
+public abstract class JwtService {
     
 
     private String key="";
@@ -34,12 +34,14 @@ public class JwtService {
 
     public  String generateToken(User user){
         Map<String, Object> claims=new HashMap<>();
+        claims.put("username", user.getUsername());
         claims.put("email", user.getEmail());
-        claims.put("role",user.getRole());
+        claims.put("roles",user.getRoles().toArray());
+        claims.put("permissions", user.getPermissions());
         return Jwts.builder()
                 .claims()
                 .add(claims)
-                .subject(user.getUsername())
+                .subject(String.valueOf(user.getId()))
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis()+10*60*1000))
                 .and()
@@ -48,7 +50,9 @@ public class JwtService {
     }
 
     public  SecretKey getKey() {
-        byte[] keyBytes = Base64.getUrlDecoder().decode(key);
+        byte[] keyBytes = Base64
+                .getUrlDecoder()
+                .decode(key);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

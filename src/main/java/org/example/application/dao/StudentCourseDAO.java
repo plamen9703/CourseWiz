@@ -23,19 +23,23 @@ public class StudentCourseDAO  implements StudentCourseRepository {
 
     @Override
     public List<StudentCourse> findAll() {
-        String sql="SELECT student_pin, course_id, completion_date FROM public.student_course_xref;";
-        return jdbcHelper.query(sql, STUDENT_COURSE_RESULT_SET_MAPPER);
+        String sql="SELECT student_pin, course_id, completion_date FROM coursera.student_course_xref;";
+        return jdbcHelper.query(sql,
+                STUDENT_COURSE_RESULT_SET_MAPPER);
     }
 
     @Override
-    public Optional<StudentCourse> findById(String studentPin, Integer courseId) {
-        String sql="SELECT student_pin, course_id, completion_date FROM public.student_course_xref WHERE student_pin=? AND course_id=?;";
-        return jdbcHelper.querySingle(sql,STUDENT_COURSE_RESULT_SET_MAPPER, studentPin, courseId);
+    public Optional<StudentCourse> findById(StudentCourse studentCourse) {
+        String sql="SELECT student_pin, course_id, completion_date FROM coursera.student_course_xref WHERE student_pin=? AND course_id=?;";
+        return jdbcHelper.querySingle(sql,
+                STUDENT_COURSE_RESULT_SET_MAPPER,
+                studentCourse.getStudentPin(),
+                studentCourse.getCourseId());
     }
 
     @Override
-    public StudentCourse create(StudentCourse studentCourse) {
-        String sql = "INSERT INTO public.student_course_xref(student_pin, course_id, completion_date) VALUES (?, ?, ?);";
+    public StudentCourse insert(StudentCourse studentCourse) {
+        String sql = "INSERT INTO coursera.student_course_xref(student_pin, course_id, completion_date) VALUES (?, ?, ?);";
         return jdbcHelper.insert(sql,
                 STUDENT_COURSE_RESULT_SET_MAPPER,
                 studentCourse.getStudentPin(),
@@ -44,20 +48,27 @@ public class StudentCourseDAO  implements StudentCourseRepository {
     }
 
     @Override
-    public void update(String studentPin, Integer courseId,StudentCourse studentCourse) {
-        String sql="UPDATE public.student_course_xref SET completion_date=? WHERE student_pin=? AND course_id=?;";
-        jdbcHelper.update(sql, studentCourse.getCompletionDate(),studentPin, courseId);
+    public int update(StudentCourse studentCourse) {
+        String sql="UPDATE coursera.student_course_xref SET completion_date=? WHERE student_pin=? AND course_id=?;";
+        return jdbcHelper.update(sql,
+                studentCourse.getCompletionDate(),
+                studentCourse.getStudentPin(),
+                studentCourse.getCourseId());
     }
 
     @Override
-    public void delete(String studentPin, Integer courseId) {
-        String sql = "DELETE FROM public.student_course_xref WHERE student_pin=? AND course_id=?;";
-        jdbcHelper.update(sql,studentPin, courseId);
+    public int delete(StudentCourse studentCourse) {
+        String sql = "DELETE FROM coursera.student_course_xref WHERE student_pin=? AND course_id=?;";
+        return jdbcHelper.update(sql,
+                studentCourse.getStudentPin(),
+                studentCourse.getCourseId());
     }
 
     @Override
-    public boolean existById(String studentPin, Integer courseId) {
-        String sql = "SELECT student_pin, course_id, completion_date FROM public.student_course_xref WHERE student_pin=?, course_id=?;";
-        return jdbcHelper.exists(sql, studentPin, courseId);
+    public boolean existsById(StudentCourse studentCourse) {
+        String sql = "SELECT student_pin, course_id, completion_date FROM coursera.student_course_xref WHERE student_pin=?, course_id=?;";
+        return jdbcHelper.exists(sql,
+                studentCourse.getStudentPin(),
+                studentCourse.getCourseId());
     }
 }

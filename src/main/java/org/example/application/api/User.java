@@ -1,8 +1,14 @@
 package org.example.application.api;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.security.auth.Subject;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 public class User implements Principal {
 
@@ -10,24 +16,43 @@ public class User implements Principal {
     private String username;
     private String email;
     private String password;
-    private String role;
+    @JsonProperty("role")
+    private Set<String> roles =new HashSet<>();
+    @JsonProperty("permission")
+    private Set<String> permissions=new HashSet<>();
     private Timestamp createdAt;
+    @Valid
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Profile profile;
 
-    public User(Integer id, String username, String email, String password, String role, Timestamp createdAt) {
+    public User(Integer id, String username, String email, String password, Set<String> roles, Set<String> permissions, Timestamp createdAt, Profile profile) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
+        this.permissions = permissions;
         this.createdAt = createdAt;
+        this.profile = profile;
     }
 
     public User() {
     }
 
-    public User(String userName, String role) {
-        this.username=userName;
-        this.role=role;
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    public Set<String> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<String> permissions) {
+        this.permissions = permissions;
     }
 
     public Integer getId() {
@@ -62,12 +87,12 @@ public class User implements Principal {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public Set<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
     public Timestamp getCreatedAt() {
@@ -89,14 +114,14 @@ public class User implements Principal {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
+                ", role='" + roles + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }
 
     @Override
     public String getName() {
-        return username;
+        return String.valueOf(id);
     }
 
     @Override

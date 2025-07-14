@@ -6,18 +6,18 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Timestamp;
 
 public class Course {
-    private int id;
+    private Integer id;
     private String name;
     private Integer instructorId;
-    private short totalTime;
-    private short credit;
+    private Short totalTime;
+    private Short credit;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private Timestamp timeCreated;
 
     public Course() {
     }
 
-    public Course(int id, String name, Integer instructorId, short totalTime, short credit, Timestamp timeCreated) {
+    public Course(Integer id, String name, Integer instructorId, Short totalTime, Short credit, Timestamp timeCreated) {
         this.id = id;
         this.name = name;
         this.instructorId = instructorId;
@@ -26,11 +26,11 @@ public class Course {
         this.timeCreated = timeCreated;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -50,19 +50,19 @@ public class Course {
         this.instructorId = instructorId;
     }
 
-    public short getTotalTime() {
+    public Short getTotalTime() {
         return totalTime;
     }
 
-    public void setTotalTime(short totalTime) {
+    public void setTotalTime(Short totalTime) {
         this.totalTime = totalTime;
     }
 
-    public short getCredit() {
+    public Short getCredit() {
         return credit;
     }
 
-    public void setCredit(short credit) {
+    public void setCredit(Short credit) {
         this.credit = credit;
     }
 

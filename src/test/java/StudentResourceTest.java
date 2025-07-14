@@ -1,8 +1,8 @@
-import org.example.application.jwt.JwtAuthFilter;
+import org.example.application.services.auth.jwt.JwtAuthFilter;
 import org.example.application.resource.StudentResource;
 import org.example.application.resource.UserResource;
-import org.example.application.services.StudentServiceImpl;
-import org.example.application.services.UserServiceImpl;
+import org.example.application.services.implementations.StudentServiceImpl;
+import org.example.application.services.implementations.UserServiceImpl;
 import org.example.application.services.interfaces.StudentService;
 import org.example.application.services.interfaces.UserService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -46,7 +46,7 @@ public class StudentResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testGetAllStudents_withValidToken() {
+    public void testFindAllStudents_withValidToken() {
         Response response = target("/students")
                 .request(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -57,7 +57,7 @@ public class StudentResourceTest extends JerseyTest {
     }
 
     @Test
-    public void testGetAllStudents_withoutToken_shouldFail() {
+    public void testFindAllStudents_withoutToken_shouldFail() {
         Response response = target("/students")
                 .request(MediaType.APPLICATION_JSON)
                 .get();

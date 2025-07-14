@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface StudentCourseReportRepository {
 
-     List<StudentCourseReport> getStudentCourseReport(List<String> studentPins, Integer minimlaCredit, String startDate, String endDate);
+     List<StudentCourseReport> getStudentCourseReport(List<String> studentPins, Integer minimalCredit, String startDate, String endDate);
 }

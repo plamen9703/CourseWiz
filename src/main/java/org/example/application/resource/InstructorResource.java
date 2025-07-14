@@ -3,6 +3,7 @@ package org.example.application.resource;
 import org.example.application.api.Instructor;
 import org.example.application.services.interfaces.InstructorService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -14,6 +15,7 @@ import java.util.List;
 @Path("instructors")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@RolesAllowed({"instructor-admin", "course-admin"})
 public class InstructorResource {
     private  final InstructorService instructorService;
 
@@ -24,43 +26,55 @@ public class InstructorResource {
 
     @GET
     public Response findAll(){
-        return Response.ok(instructorService.findAll()).build();
+        List<Instructor> instructors = instructorService.findAll();
+        return Response.ok(instructors).build();
     }
 
     @GET
     @Path("/{id}")
-    public Response findById(@PathParam("id") int instructorId){
-        return instructorService.findById(instructorId)
-                .map( instructor -> Response.ok(instructor).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    @RolesAllowed({"instructor-admin", "course-admin","instructor"})
+    public Response findById(@PathParam("id") Integer id){
+        Instructor instructor=new Instructor();
+        instructor.setId(id);
+        Instructor found= instructorService.findById(instructor);
+        return Response
+                .ok(found)
+                .build();
     }
 
     @POST
     @Path("/batch")
-    public Response saveAll(List<Instructor> instructors){
-        List<Instructor> created=new ArrayList<>();
+    public Response saveAll(List<Instructor> instructors, @Context UriInfo uriInfo){
+        List<URI> locations=new ArrayList<>();
         for (Instructor instructor: instructors){
-            created.add(instructorService.create(instructor));
+            Instructor saved = instructorService.create(instructor);
+            URI build = uriInfo.getAbsolutePathBuilder()
+                    .path(String.valueOf(saved.getId()))
+                    .build();
+            locations.add(build);
         }
-        return Response.status(Response.Status.CREATED).entity(created).build();
+        return Response.status(Response.Status.CREATED)
+                .entity(locations)
+                .build();
     }
 
     @POST
     public Response create(Instructor instructor, @Context UriInfo uriInfo){
-        Instructor saved=instructorService.create(instructor);
+        instructorService.create(instructor);
         URI location = uriInfo.getAbsolutePathBuilder().path(String.valueOf(instructor.getId())).build();
-        return Response.created(location).entity(saved).build();
+        return Response.created(location).build();
     }
 
     @PUT // do I replace it with patch ????
+    @RolesAllowed({"instructor-admin", "course-admin","instructor"})
     public Response update(Instructor instructor){
-        instructorService.update(instructor.getId(),instructor);
+        instructorService.update(instructor);
         return Response.noContent().build();
     }
 
     @DELETE
     public Response delete(Instructor instructor){
-        instructorService.delete(instructor.getId());
+        instructorService.delete(instructor);
         return Response.noContent().build();
     }
 

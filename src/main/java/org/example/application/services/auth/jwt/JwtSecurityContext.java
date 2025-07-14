@@ -1,9 +1,10 @@
-package org.example.application.jwt;
+package org.example.application.services.auth.jwt;
 
 import org.example.application.api.User;
 
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
+import java.util.Set;
 
 public class JwtSecurityContext implements SecurityContext {
 
@@ -21,8 +22,8 @@ public class JwtSecurityContext implements SecurityContext {
 
     @Override
     public boolean isUserInRole(String role) {
-        String userRole = this.user.getRole();
-        return userRole !=null && userRole.equals(role);
+        Set<String> roles = user.getRoles();
+        return  roles.contains(role);
     }
 
     @Override

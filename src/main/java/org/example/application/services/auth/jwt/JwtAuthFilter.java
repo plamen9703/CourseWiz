@@ -1,4 +1,4 @@
-package org.example.application.jwt;
+package org.example.application.services.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -17,6 +17,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
 
 @Provider
 @Priority(Priorities.AUTHENTICATION)
@@ -49,9 +51,20 @@ public class JwtAuthFilter implements ContainerRequestFilter {
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
+
+            User principal=new User();
+
             String userName=claims.getSubject();
-            String role = claims.get("role",String.class);
-            User principal=new User(userName, role);
+            principal.setUsername(userName);
+
+            List<String> roles =claims.get("roles",List.class);
+            HashSet<String> roleSet = new HashSet<>(roles);
+            principal.setRoles(roleSet);
+
+            List<String> permissions = claims.get("permissions", List.class);
+            HashSet<String> permissionsSet = new HashSet<>(permissions);
+            principal.setPermissions(permissionsSet);
+
             SecurityContext originalContext = containerRequestContext.getSecurityContext();
             JwtSecurityContext securityContext = new JwtSecurityContext(principal, originalContext.isSecure());
             containerRequestContext.setSecurityContext(securityContext);

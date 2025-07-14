@@ -28,21 +28,22 @@ public class CourseDAO implements CourseRepository {
 
     @Override
     public List<Course> findAll() {
-        String sql = "SELECT id, name, instructor_id, total_time, credit, time_created FROM public.courses;";
+        String sql = "SELECT id, name, instructor_id, total_time, credit, time_created FROM coursera.courses;";
         return jdbcHelper.query(sql, COURSE_RESULT_SET_MAPPER);
     }
 
 
     @Override
-    public Optional<Course> findById(int courseId) {
-        String sql="SELECT id, name, instructor_id, total_time, credit, time_created FROM public.courses WHERE id=?;";
-        return jdbcHelper.querySingle(sql,COURSE_RESULT_SET_MAPPER, courseId);
+    public Optional<Course> findById(Course course) {
+        String sql="SELECT id, name, instructor_id, total_time, credit, time_created FROM coursera.courses WHERE id=?;";
+        return jdbcHelper.querySingle(sql,COURSE_RESULT_SET_MAPPER, course.getId());
     }
 
     @Override
-    public Course create(Course course) {
-        String sql = "INSERT INTO public.courses(name, instructor_id, total_time, credit, time_created) VALUES (?, ?, ?, ?, COALESCE(?, CURRENT_TIMESTAMP));";
-        return jdbcHelper.insert(sql, COURSE_RESULT_SET_MAPPER,
+    public Course insert(Course course) {
+        String sql = "INSERT INTO coursera.courses(name, instructor_id, total_time, credit, time_created) VALUES (?, ?, ?, ?, COALESCE(?, CURRENT_TIMESTAMP));";
+        return jdbcHelper.insert(sql,
+                COURSE_RESULT_SET_MAPPER,
                 course.getName(),
                 course.getInstructorId(),
                 course.getTotalTime(),
@@ -51,25 +52,25 @@ public class CourseDAO implements CourseRepository {
     }
 
     @Override
-    public int update(Integer courseId,Course course) {
-        String sql = "UPDATE public.courses SET  name=?, instructor_id=?, total_time=?, credit=? WHERE id=?";
+    public int update(Course course) {
+        String sql = "UPDATE coursera.courses SET  name=?, instructor_id=?, total_time=?, credit=? WHERE id=?";
         return jdbcHelper.update(sql,
                 course.getName(),
                 course.getInstructorId(),
                 course.getTotalTime(),
                 course.getCredit(),
-                courseId);
+                course.getId());
     }
 
     @Override
-    public int delete(Integer courseId) {
-        String sql = "DELETE FROM public.courses WHERE id=?;";
-        return jdbcHelper.update(sql, courseId);
+    public int delete(Course course) {
+        String sql = "DELETE FROM coursera.courses WHERE id=?;";
+        return jdbcHelper.update(sql, course.getId());
     }
 
     @Override
-    public boolean existsById(int courseId) {
-        String sql="SELECT id, name, instructor_id, total_time, credit, time_created FROM public.courses WHERE id=?;";
-        return jdbcHelper.exists(sql, courseId);
+    public boolean existsById(Course course) {
+        String sql="SELECT id, name, instructor_id, total_time, credit, time_created FROM coursera.courses WHERE id=?;";
+        return jdbcHelper.exists(sql, course.getId());
     }
 }
