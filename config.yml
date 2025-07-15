@@ -8,6 +8,7 @@ database:
   password: coursewiz123
   url: jdbc:postgresql://localhost:5432/coursewiz
   maxSize: 10
-  properties:
-    hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-    hibernate.hbm2ddl.auto: update
+#  properties:
+#    hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+#    hibernate.hbm2ddl.auto: update
+#

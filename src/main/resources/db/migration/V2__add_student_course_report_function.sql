@@ -1,16 +1,13 @@
-
 CREATE OR REPLACE FUNCTION coursera.get_student_course_report(
 	p_student_pins character varying[],
 	p_min_credit integer,
 	p_start_date date,
 	p_end_date date)
-    RETURNS TABLE("Student PIN" character varying, "Student Name" character varying, "Total Credit" integer, "Course ID" integer, "Course Name" character varying, "Total Time" smallint, "Credit" smallint, "Instructor Name" character varying)
-    LANGUAGE 'plpgsql'
+    RETURNS TABLE("Student PIN" character varying, "Student Name" character varying, "Total Credit" integer, "Course ID" integer, "Course Name" character varying, "Total Time" smallint, "Credit" smallint, "Instructor Name" character varying) 
     COST 100
-    VOLATILE PARALLEL UNSAFE
     ROWS 1000
-
-AS $$
+LANGUAGE plpgsql
+AS $BODY$
 BEGIN
     RETURN QUERY
     WITH report_data AS (
@@ -36,7 +33,7 @@ BEGIN
         SELECT
             pin,
             SUM(credit)::INT AS total_credit
-        FROM coursera.report_data
+        FROM report_data
         GROUP BY pin
     )
     SELECT
@@ -53,6 +50,4 @@ BEGIN
     WHERE (p_min_credit IS NULL OR tc.total_credit >= p_min_credit)
     ORDER BY tc.total_credit DESC, rd.student_name ASC;
 END;
-$$;
-
-
+$BODY$;

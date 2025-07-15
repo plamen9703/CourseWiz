@@ -1,4 +1,3 @@
--- Instructors
 INSERT INTO coursera.instructors ( first_name, last_name, time_created) VALUES
 ( 'Alice', 'Newton', NOW() - INTERVAL '500 days'),
 ( 'Bob', 'Einstein', NOW() - INTERVAL '400 days'),
@@ -6,7 +5,6 @@ INSERT INTO coursera.instructors ( first_name, last_name, time_created) VALUES
 ( 'Daniel', 'Turing', NOW() - INTERVAL '200 days'),
 ( 'Eva', 'Lovelace', NOW() - INTERVAL '100 days');
 
--- Students
 INSERT INTO coursera.students ( first_name, last_name, time_created) VALUES
 ( 'Tom', 'Baker', NOW() - INTERVAL '200 days'),
 ( 'Jane', 'Doe', NOW() - INTERVAL '180 days'),
@@ -19,7 +17,6 @@ INSERT INTO coursera.students ( first_name, last_name, time_created) VALUES
 ( 'Ava', 'Moore', NOW() - INTERVAL '40 days'),
 ( 'Elijah', 'Taylor', NOW() - INTERVAL '20 days');
 
--- Courses
 INSERT INTO coursera.courses (name, instructor_id, total_time, credit, time_created) VALUES
 ('Intro to Math', 1, 30, 3, NOW() - INTERVAL '300 days'),
 ('Physics Basics', 2, 45, 4, NOW() - INTERVAL '290 days'),
@@ -37,8 +34,6 @@ INSERT INTO coursera.courses (name, instructor_id, total_time, credit, time_crea
 ( 'Statistics', 1, 45, 4, NOW() - INTERVAL '170 days'),
 ( 'Machine Learning', 4, 60, 5, NOW() - INTERVAL '160 days');
 
--- Student–Course Enrollments (xref)
--- We'll give some students high total credits, others low, with completion dates for filtering
 
 INSERT INTO coursera.student_course_xref (student_pin, course_id, completion_date) VALUES
 -- S1001 (Tom) — high credits
