@@ -1,9 +1,9 @@
-import org.example.application.dao.CourseDAO;
-import org.example.application.dao.InstructorDAO;
-import org.example.application.repository.CourseRepository;
-import org.example.application.repository.InstructorRepository;
-import org.example.application.services.implementations.CourseServiceImpl;
-import org.example.application.services.interfaces.CourseService;
+import org.example.application.dao.coursera.CourseDAO;
+import org.example.application.dao.coursera.InstructorDAO;
+import org.example.application.repository.coursera.CourseRepository;
+import org.example.application.repository.coursera.InstructorRepository;
+import org.example.application.services.implementations.coursera.CourseServiceImpl;
+import org.example.application.services.interfaces.coursera.CourseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

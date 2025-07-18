@@ -1,26 +1,7 @@
-//import org.example.application.services.auth.jwt.JwtAuthFilter;
-//import org.example.application.resource.StudentResource;
-//import org.example.application.resource.UserResource;
-//import org.example.application.services.implementations.StudentServiceImpl;
-//import org.example.application.services.implementations.UserServiceImpl;
-//import org.example.application.services.interfaces.StudentService;
-//import org.example.application.services.interfaces.UserService;
-//import org.glassfish.hk2.utilities.binding.AbstractBinder;
-//import org.glassfish.jersey.server.ResourceConfig;
-//import org.glassfish.jersey.test.JerseyTest;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//
-//import javax.ws.rs.client.Entity;
-//import javax.ws.rs.core.Application;
-//import javax.ws.rs.core.HttpHeaders;
-//import javax.ws.rs.core.MediaType;
-//import javax.ws.rs.core.Response;
-//import java.util.Map;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//public class StudentResourceTest extends JerseyTest {
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.jupiter.api.Test;
+
+public class StudentResourceTest extends JerseyTest {
 //
 //    private String jwtToken;
 //
@@ -45,8 +26,8 @@
 //        assertNotNull(jwtToken);
 //    }
 //
-//    @Test
-//    public void testFindAllStudents_withValidToken() {
+    @Test
+    public void testFindAllStudents_withValidToken() {
 //        Response response = target("/students")
 //                .request(MediaType.APPLICATION_JSON)
 //                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -63,7 +44,7 @@
 //                .get();
 //
 //        assertEquals(401, response.getStatus());
-//    }
+    }
 //
 //    @Override
 //    protected Application configure() {
@@ -86,4 +67,4 @@
 //        });
 //        return config;
 //    }
-//}
+}

@@ -1,6 +1,5 @@
 package org.example.db;
 
-import org.example.application.exceptions.EntityInsertFailedException;
 import org.example.application.exceptions.EntityUpdateFailedException;
 
 import javax.sql.DataSource;
@@ -55,7 +54,7 @@ public class JdbcHelperImpl implements JdbcHelper{
             conn.setAutoCommit(false);
             setParams(stmt, params);
             int i = stmt.executeUpdate();
-            if(i!=1){
+            if(i==0){
                 conn.rollback();
                 throw new EntityUpdateFailedException("Database failed to update!");
             }
@@ -73,16 +72,18 @@ public class JdbcHelperImpl implements JdbcHelper{
         ) {
             conn.setAutoCommit(false);
             setParams(stmt, params);
-            int i=stmt.executeUpdate();
-            if(i==0){
-                conn.rollback();
-                throw new EntityInsertFailedException("Failed to insert entity!");
-            }
-            conn.commit();
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
+//            int i=stmt.executeUpdate();
+//            if(i==0){
+//                conn.rollback();
+//                throw new EntityInsertFailedException("Failed to insert entity!");
+//            }
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return keyMapper.map(rs);
+                    T mapped = keyMapper.map(rs);
+                    conn.commit();
+                    return mapped;
                 } else {
+                    conn.rollback();
                     throw new RuntimeException("No generated key returned");
                 }
             }

@@ -1,7 +1,7 @@
-import org.example.application.api.Student;
-import org.example.application.resource.StudentResource;
-import org.example.application.services.implementations.StudentServiceImpl;
-import org.example.application.services.interfaces.StudentService;
+import org.example.application.api.coursera.Student;
+import org.example.application.resource.coursera.StudentResource;
+import org.example.application.services.implementations.coursera.StudentServiceImpl;
+import org.example.application.services.interfaces.coursera.StudentService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import  io.dropwizard.testing.junit5.ResourceExtension;

@@ -2,7 +2,7 @@ package org.example.application.services.interfaces;
 
 import java.util.List;
 
-interface JdbcService<T> {
+public interface JdbcService<T> {
 
     List<T> findAll();
 

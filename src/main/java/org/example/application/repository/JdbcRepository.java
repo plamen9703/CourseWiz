@@ -3,7 +3,7 @@ package org.example.application.repository;
 import java.util.List;
 import java.util.Optional;
 
-interface JdbcRepository<T> {
+public interface JdbcRepository<T> {
 
     List<T> findAll();
 

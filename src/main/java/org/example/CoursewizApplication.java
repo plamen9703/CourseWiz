@@ -2,19 +2,30 @@ package org.example;
 
 
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.ManagedDataSource;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import org.example.application.dao.*;
+import org.example.application.api.users.UserAuthenticated;
+import org.example.application.dao.coursera.*;
+import org.example.application.dao.users.UserInstructorDAO;
+import org.example.application.dao.users.UserStudentDAO;
 import org.example.application.exceptions.maps.*;
-import org.example.application.services.auth.AuthServices;
-import org.example.application.services.auth.jwt.JwtAuthFilter;
-import org.example.application.repository.*;
-import org.example.application.resource.*;
-import org.example.application.services.implementations.*;
-import org.example.application.services.interfaces.*;
+import org.example.application.repository.coursera.*;
+import org.example.application.repository.users.UserInstructorRepository;
+import org.example.application.repository.users.UserStudentRepository;
+import org.example.application.resource.coursera.*;
+import org.example.application.resource.users.UserInstructorResource;
+import org.example.application.resource.users.UserStudentResource;
+import org.example.application.services.implementations.coursera.*;
+import org.example.application.services.implementations.users.UserInstructorServiceImpl;
+import org.example.application.services.implementations.users.UserStudentServiceImpl;
+import org.example.application.services.interfaces.coursera.*;
+import org.example.application.services.interfaces.users.UserInstructorService;
+import org.example.application.services.interfaces.users.UserStudentService;
+import org.example.application.services.jwt.JwtAuthFilter;
 import org.example.db.JdbcHelper;
 import org.example.db.JdbcHelperImpl;
 import org.flywaydb.core.Flyway;
@@ -76,7 +87,11 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
                 new NotFoundExceptionMapper(),
                 new InvalidUserCredentialsMapper(),
                 new EntityInserFailedExceptionMapper(),
-                new EntityUpdateFailedExceptionMapper()
+                new EntityUpdateFailedExceptionMapper(),
+                new UserTokenExceptionMapper(),
+                new UserTokenInvalidDateExceptionMapper(),
+                new UserLoginExceptionMapper(),
+                new StudentCourseReportExceptionMapper()
         };
         for (ExceptionMapper exception:exceptions){
             jersey.register(exception);
@@ -88,31 +103,46 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
         JdbcHelper jdbcHelper = new JdbcHelperImpl(dataSource);
 
         //repos
+        //coursera
         InstructorRepository instructorRepository = new InstructorDAO(jdbcHelper);
         CourseRepository courseRepository = new CourseDAO(jdbcHelper);
         StudentRepository studentRepository = new StudentDAO(jdbcHelper);
         StudentCourseRepository studentCourseRepository = new StudentCourseDAO(jdbcHelper);
         StudentCourseReportRepository studentCourseReportRepository =new StudentCourseReportDAO(jdbcHelper);
-        UserRepository userRepository=new UserDAO(jdbcHelper);
+        //users
+        UserStudentRepository userStudentRepository=new UserStudentDAO(jdbcHelper);
+        UserInstructorRepository userInstructorRepository = new UserInstructorDAO(jdbcHelper);
 
         //services
-        jersey.register(new JwtAuthFilter(AuthServices.JWT_SERVICE.getKey()));
+        //jwt
+//        jersey.register(new JwtAuthFilter());
         jersey.register(RolesAllowedDynamicFeature.class);
+        jersey.register(new JwtAuthFilter());
+        jersey.register(new AuthValueFactoryProvider.Binder<UserAuthenticated>(UserAuthenticated.class));
 
+        //coursera
         CourseService courseService = new CourseServiceImpl(courseRepository, instructorRepository);
         InstructorService instructorService = new InstructorServiceImpl(instructorRepository);
         StudentService studentService = new StudentServiceImpl(studentRepository);
         StudentCourseService studentCourseService = new StudentCourseServiceImpl( studentCourseRepository);
-        StudentCourseReportService studentCourseReportService=new StudentCourseReportServiceImpl(studentCourseReportRepository);
-        UserService userService=new UserServiceImpl(userRepository);
+        StudentCourseReportService studentCourseReportService=new StudentCourseReportServiceImpl(studentCourseReportRepository, studentRepository);
+
+        //users
+        UserStudentService userStudentService=new UserStudentServiceImpl(userStudentRepository);
+        UserInstructorService userInstructorService = new UserInstructorServiceImpl(userInstructorRepository);
 
         //resources
+        //coursera
         StudentResource studentResource = new StudentResource(studentService);
         InstructorResource instructorResource = new InstructorResource(instructorService);
         CourseResource courseResource = new CourseResource(courseService);
         StudentCourseResource studentCourseResource = new StudentCourseResource(studentCourseService);
         StudentCourseReportResource studentCourseReportResource = new StudentCourseReportResource(studentCourseReportService);
-        UserResource userResource=new UserResource(userService);
+
+        //users
+        UserStudentResource userStudentResource=new UserStudentResource(userStudentService);
+        UserInstructorResource userInstructorResource = new UserInstructorResource(userInstructorService);
+
 
         //registers
         jersey.register(studentResource);
@@ -120,7 +150,8 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
         jersey.register(courseResource);
         jersey.register(studentCourseResource);
         jersey.register(studentCourseReportResource);
-        jersey.register(userResource);
+        jersey.register(userStudentResource);
+        jersey.register(userInstructorResource);
     }
 
 //     TEST: test getting permission set
