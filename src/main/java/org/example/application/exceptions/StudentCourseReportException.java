@@ -4,4 +4,9 @@ public class StudentCourseReportException extends RuntimeException {
     public StudentCourseReportException(String message) {
         super(message);
     }
+
+    public StudentCourseReportException(String message, Exception e){
+        super(message, e);
+    }
+
 }

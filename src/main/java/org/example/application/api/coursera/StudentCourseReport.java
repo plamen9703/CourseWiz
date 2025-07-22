@@ -1,5 +1,7 @@
 package org.example.application.api.coursera;
 
+import java.util.Objects;
+
 public class StudentCourseReport {
     private String studentPin;
     private String StudentName;
@@ -100,5 +102,18 @@ public class StudentCourseReport {
                 ", credit=" + credit +
                 ", instructorName='" + instructorName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StudentCourseReport that = (StudentCourseReport) o;
+        return Objects.equals(studentPin, that.studentPin) && Objects.equals(StudentName, that.StudentName) && Objects.equals(totalCredit, that.totalCredit) && Objects.equals(courseId, that.courseId) && Objects.equals(courseName, that.courseName) && Objects.equals(totalTime, that.totalTime) && Objects.equals(credit, that.credit) && Objects.equals(instructorName, that.instructorName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentPin, StudentName, totalCredit, courseId, courseName, totalTime, credit, instructorName);
     }
 }

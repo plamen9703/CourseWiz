@@ -13,7 +13,7 @@ public class CourseDAO implements CourseRepository {
 
     private final JdbcHelper jdbcHelper;
 
-    private static final ResultSetMapper<Course> COURSE_RESULT_SET_MAPPER = rs -> new Course(
+    public static final ResultSetMapper<Course> COURSE_RESULT_SET_MAPPER = rs -> new Course(
             rs.getInt("id"),
             rs.getString("name"),
             rs.getInt("instructor_id"),
@@ -41,19 +41,18 @@ public class CourseDAO implements CourseRepository {
 
     @Override
     public Course insert(Course course) {
-        String sql = "INSERT INTO coursera.courses(name, instructor_id, total_time, credit, time_created) VALUES (?, ?, ?, ?, COALESCE(?, CURRENT_TIMESTAMP));";
+        String sql = "INSERT INTO coursera.courses(name, instructor_id, total_time, credit) VALUES (?, ?, ?, ?);";
         return jdbcHelper.insert(sql,
                 COURSE_RESULT_SET_MAPPER,
                 course.getName(),
                 course.getInstructorId(),
                 course.getTotalTime(),
-                course.getCredit(),
-                course.getTimeCreated());
+                course.getCredit());
     }
 
     @Override
     public int update(Course course) {
-        String sql = "UPDATE coursera.courses SET  name=?, instructor_id=?, total_time=?, credit=? WHERE id=?";
+        String sql = "UPDATE coursera.courses SET name=?, instructor_id=?, total_time=?, credit=? WHERE id=?;";
         return jdbcHelper.update(sql,
                 course.getName(),
                 course.getInstructorId(),

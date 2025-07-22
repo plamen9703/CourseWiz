@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-public class UserInstructorDAO implements UserInstructorRepository {
+public class UserInstructorDAO extends UserDAO<UserInstructor> implements UserInstructorRepository {
 
     private final JdbcHelper jdbcHelper;
 

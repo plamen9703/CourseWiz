@@ -11,7 +11,7 @@ import java.util.Optional;
 public class StudentCourseDAO  implements StudentCourseRepository {
     private final JdbcHelper jdbcHelper;
 
-    private static final ResultSetMapper<StudentCourse> STUDENT_COURSE_RESULT_SET_MAPPER= rs ->new StudentCourse(
+    public static final ResultSetMapper<StudentCourse> STUDENT_COURSE_RESULT_SET_MAPPER= rs ->new StudentCourse(
             rs.getString("student_pin"),
             rs.getInt("course_id"),
             rs.getDate("completion_date")

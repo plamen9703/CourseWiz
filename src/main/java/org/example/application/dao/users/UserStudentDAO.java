@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-public class UserStudentDAO implements UserStudentRepository {
+public class UserStudentDAO extends UserDAO<UserStudent> implements UserStudentRepository {
 
     private  class UserMapperWithPassword implements ResultSetMapper<UserStudent> {
 

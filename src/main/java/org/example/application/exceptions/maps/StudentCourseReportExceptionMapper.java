@@ -9,6 +9,6 @@ public class StudentCourseReportExceptionMapper implements ExceptionMapper<Stude
 
     @Override
     public Response toResponse(StudentCourseReportException e) {
-        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse("Not Found", e.getMessage())).build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorResponse("Report Error!", e.getMessage())).build();
     }
 }

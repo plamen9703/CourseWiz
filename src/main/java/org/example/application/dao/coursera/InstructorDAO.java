@@ -12,7 +12,7 @@ public class InstructorDAO implements InstructorRepository {
 
     private final JdbcHelper jdbcHelper;
 
-    private static final ResultSetMapper<Instructor> INSTRUCTOR_RESULT_SET_MAPPER= rs->new Instructor(
+    public static final ResultSetMapper<Instructor> INSTRUCTOR_RESULT_SET_MAPPER= rs->new Instructor(
             rs.getInt("id"),
             rs.getString("first_name"),
             rs.getString("last_name"),
@@ -37,19 +37,19 @@ public class InstructorDAO implements InstructorRepository {
 
     @Override
     public Instructor insert(Instructor instructor) {
-        String sql="INSERT INTO coursera.instructors( first_name, last_name, time_created) VALUES (?, ?);";
+        String sql="INSERT INTO coursera.instructors(first_name, last_name) VALUES (?, ?);";
         return jdbcHelper.insert(sql,INSTRUCTOR_RESULT_SET_MAPPER, instructor.getFirstName(),instructor.getLastName());
     }
 
     @Override
     public int update(Instructor instructor) {
-        String sql="UPDATE coursera.instructors SET  first_name=?, last_name=? WHERE id=?;";
+        String sql="UPDATE coursera.instructors SET first_name=?, last_name=? WHERE id=?;";
         return jdbcHelper.update(sql, instructor.getFirstName(), instructor.getLastName(), instructor.getId());
     }
 
     @Override
     public int delete(Instructor instructor) {
-        String sql="DELETE FROM coursera.instructors WHERE id=?;";
+        String sql="DELETE FROM coursera.instructors WHERE id = ?;";
         return jdbcHelper.update(sql,instructor.getId());
     }
 

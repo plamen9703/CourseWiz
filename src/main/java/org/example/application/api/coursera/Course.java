@@ -4,6 +4,7 @@ package org.example.application.api.coursera;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class Course {
     private Integer id;
@@ -84,5 +85,18 @@ public class Course {
                 ", credit=" + credit +
                 ", timeCreated=" + timeCreated +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return Objects.equals(id, course.id) && Objects.equals(name, course.name) && Objects.equals(instructorId, course.instructorId) && Objects.equals(totalTime, course.totalTime) && Objects.equals(credit, course.credit) && Objects.equals(timeCreated, course.timeCreated);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, instructorId, totalTime, credit, timeCreated);
     }
 }

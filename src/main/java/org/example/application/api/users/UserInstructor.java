@@ -3,6 +3,7 @@ package org.example.application.api.users;
 import org.example.application.api.coursera.Instructor;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Set;
 
 public class UserInstructor extends User{
@@ -28,5 +29,19 @@ public class UserInstructor extends User{
 
     public void setInstructor(Instructor instructor) {
         this.instructor = instructor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        UserInstructor that = (UserInstructor) o;
+        return Objects.equals(instructor, that.instructor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), instructor);
     }
 }

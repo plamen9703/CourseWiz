@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class Student  {
     @Pattern(regexp = "^STU\\d{7}$", message = "Pin must start with 'STU' and be followed by 7 digits.")
@@ -64,5 +65,18 @@ public class Student  {
                 ", lastName='" + lastName + '\'' +
                 ", timeCreated=" + timeCreated +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return Objects.equals(pin, student.pin) && Objects.equals(firstName, student.firstName) && Objects.equals(lastName, student.lastName) && Objects.equals(timeCreated, student.timeCreated);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pin, firstName, lastName, timeCreated);
     }
 }

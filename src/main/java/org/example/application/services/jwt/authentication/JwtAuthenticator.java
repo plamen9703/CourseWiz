@@ -3,6 +3,7 @@ package org.example.application.services.jwt.authentication;
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.PrematureJwtException;
 import org.example.application.api.users.UserAuthenticated;
 import org.example.application.services.jwt.JwtUtil;
@@ -24,8 +25,14 @@ public class JwtAuthenticator implements Authenticator<String, UserAuthenticated
             Instant issuredAt=claims.getIssuedAt().toInstant();
             Instant expiredAt=claims.getExpiration().toInstant();
             if (Instant.now().isBefore(issuredAt)) {
-                throw new PrematureJwtException(null,claims,"Token is not VALID");
+                throw new PrematureJwtException(null,claims,"Token is not VALID yet!");
             }
+
+            if(Instant.now().isAfter(expiredAt)){
+                throw new ExpiredJwtException(null, claims, "Token has expired!");
+            }
+
+
             Integer id = Integer.valueOf(claims.getSubject());
             String username = claims.get("username", String.class);
             String email = claims.get("email", String.class);

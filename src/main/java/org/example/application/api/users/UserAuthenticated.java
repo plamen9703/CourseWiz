@@ -13,20 +13,6 @@ public class UserAuthenticated implements Principal {
     private final Set<String> permissions;
 
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserAuthenticated that = (UserAuthenticated) o;
-        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(roles, that.roles) && Objects.equals(permissions, that.permissions);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, email, roles, permissions);
-    }
-
     @Override
     public String toString() {
         return "UserAuthenticated{" +
@@ -74,5 +60,18 @@ public class UserAuthenticated implements Principal {
     @Override
     public boolean implies(Subject subject) {
         return Principal.super.implies(subject);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserAuthenticated that = (UserAuthenticated) o;
+        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(roles, that.roles) && Objects.equals(permissions, that.permissions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, email, roles, permissions);
     }
 }

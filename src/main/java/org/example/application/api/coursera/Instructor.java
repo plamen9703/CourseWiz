@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class Instructor  {
     private Integer id;
@@ -66,5 +67,18 @@ public class Instructor  {
                 ", lastName='" + lastName + '\'' +
                 ", timeCreated=" + timeCreated +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Instructor)) return false;
+        Instructor that = (Instructor) o;
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(timeCreated, that.timeCreated);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, timeCreated);
     }
 }
