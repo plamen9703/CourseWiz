@@ -26,6 +26,8 @@ import org.example.application.services.interfaces.coursera.*;
 import org.example.application.services.interfaces.users.UserInstructorService;
 import org.example.application.services.interfaces.users.UserStudentService;
 import org.example.application.services.jwt.JwtAuthFilter;
+import org.example.application.services.jwt.authentication.JwtAuthenticator;
+import org.example.application.services.jwt.authorization.RoleAuthorizer;
 import org.example.db.JdbcHelper;
 import org.example.db.JdbcHelperImpl;
 import org.flywaydb.core.Flyway;
@@ -117,7 +119,9 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
         //jwt
 //        jersey.register(new JwtAuthFilter());
         jersey.register(RolesAllowedDynamicFeature.class);
-        jersey.register(new JwtAuthFilter());
+        JwtAuthenticator authenticator =new JwtAuthenticator();
+        RoleAuthorizer authorizer=new RoleAuthorizer();
+        jersey.register(new JwtAuthFilter(authenticator, authorizer));
         jersey.register(new AuthValueFactoryProvider.Binder<UserAuthenticated>(UserAuthenticated.class));
 
         //coursera

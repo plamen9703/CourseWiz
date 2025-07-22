@@ -45,10 +45,10 @@ class StudentCourseDAOTest {
         StudentCourse studentCourse=new StudentCourse();
         studentCourse.setCourseId(2);
         studentCourse.setStudentPin("000");
-        when(jdbcHelper.query(anyString(), any())).thenReturn(List.of(studentCourse));
+        when(jdbcHelper.query(anyString(), any(), anyString(), anyInt())).thenReturn(List.of(studentCourse));
         studentCourseDAO.findById(studentCourse);
         verify(jdbcHelper)
-                .query(
+                .querySingle(
                         eq(sql),
                         eq(StudentCourseDAO.STUDENT_COURSE_RESULT_SET_MAPPER),
                         eq("000"),

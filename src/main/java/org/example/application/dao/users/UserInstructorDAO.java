@@ -130,13 +130,16 @@ public class UserInstructorDAO extends UserDAO<UserInstructor> implements UserIn
 
     @Override
     public Optional<UserInstructor> findByUsername(UserInstructor userInstructor) {
-        return Optional.empty();
+        String sql = """
+                SELECT * FROM users.get_user_student_login(?);
+                """;
+        return jdbcHelper.querySingle(sql, USER_MAPPER_WITH_PASSWORD, userInstructor.getUsername());
     }
 
     @Override
     public Optional<UserInstructor> findByEmail(UserInstructor userInstructor) {
         String sql = """
-                SELECT * FROM users.get_user_instructor_login(null,?);
+                SELECT * FROM users.get_user_student_login(null,?);
                 """;
         return jdbcHelper.querySingle(sql, USER_MAPPER_WITH_PASSWORD, userInstructor.getUsername());
     }

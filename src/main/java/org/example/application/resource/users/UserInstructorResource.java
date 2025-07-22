@@ -5,6 +5,7 @@ import org.example.application.api.users.UserInstructor;
 import org.example.application.services.interfaces.users.UserInstructorService;
 import org.example.application.services.jwt.JwtUtil;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -43,6 +44,7 @@ public class UserInstructorResource {
 
     @POST
     @Path("login")
+    @PermitAll
     public Response loginInstructor(UserInstructor userInstructor){
         String token = userInstructorService.login(userInstructor);
         Integer userId = userInstructorService.findByUsernameOrEmail(userInstructor).getId();

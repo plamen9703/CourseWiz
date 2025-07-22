@@ -52,6 +52,7 @@ public class UserStudentResource {
 
     @POST
     @Path("login")
+    @PermitAll
     public Response loginUserStudent(UserStudent userStudent){
         try{
             String token = userStudentService.login(userStudent);

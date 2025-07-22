@@ -31,11 +31,16 @@ public class JwtAuthFilter extends AuthFilter<String, UserAuthenticated> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthFilter.class);
 
-    private static final JwtAuthenticator JWT_AUTHENTICATOR = new JwtAuthenticator();
-    private static final RoleAuthorizer ROLE_AUTHORIZER = new RoleAuthorizer();
+    private  final JwtAuthenticator JWT_AUTHENTICATOR ;
+    private  final RoleAuthorizer ROLE_AUTHORIZER ;
+
+    public JwtAuthFilter(JwtAuthenticator jwtAuthenticator, RoleAuthorizer roleAuthorizer) {
+        JWT_AUTHENTICATOR = jwtAuthenticator;
+        ROLE_AUTHORIZER = roleAuthorizer;
+    }
 
     @Inject
-    private ResourceInfo resourceInfo;
+    ResourceInfo resourceInfo;
 
 
     @Override
