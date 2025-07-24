@@ -1,6 +1,5 @@
 package org.example.application.api.users;
 
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -13,19 +12,18 @@ public  class User {
     private String password;
     private Set<String> roles =new HashSet<>();
     private Set<String> permissions=new HashSet<>();
-    private Timestamp createdAt;
+//    private Timestamp createdAt;
 //    @Valid
 //    @JsonInclude(JsonInclude.Include.NON_NULL)
 //    private Profile profile;
 
-    public User(Integer id, String username, String email, String password, Set<String> roles, Set<String> permissions, Timestamp createdAt) {
+    public User(Integer id, String username, String email, String password, Set<String> roles, Set<String> permissions) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
         this.permissions = permissions;
-        this.createdAt = createdAt;
     }
 
     public User() {
@@ -79,17 +77,7 @@ public  class User {
         this.roles = roles;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getIdentifier() {
-        return this.username == null ? this.email : this.username;
-    }
 
     @Override
     public String toString() {
@@ -99,7 +87,6 @@ public  class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + roles + '\'' +
-                ", createdAt=" + createdAt +
                 '}';
     }
 
@@ -109,11 +96,11 @@ public  class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(roles, user.roles) && Objects.equals(permissions, user.permissions) && Objects.equals(createdAt, user.createdAt);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(roles, user.roles) && Objects.equals(permissions, user.permissions) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password, roles, permissions, createdAt);
+        return Objects.hash(id, username, email, password, roles, permissions);
     }
 }

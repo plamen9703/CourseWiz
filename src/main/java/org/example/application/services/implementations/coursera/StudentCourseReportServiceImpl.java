@@ -77,7 +77,7 @@ public class StudentCourseReportServiceImpl implements StudentCourseReportServic
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Student Report");
 
-        int rowNum = 1;
+        int rowNum = 0;
         String prevStudentPin = null;
 
         final String[] STUDENT_HEADERS = {

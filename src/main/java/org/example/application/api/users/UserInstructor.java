@@ -2,15 +2,14 @@ package org.example.application.api.users;
 
 import org.example.application.api.coursera.Instructor;
 
-import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 
 public class UserInstructor extends User{
     private Instructor instructor;
 
-    public UserInstructor(Integer id, String username, String email, String password, Set<String> roles, Set<String> permissions, Timestamp createdAt, Instructor instructor) {
-        super(id, username, email, password, roles, permissions, createdAt);
+    public UserInstructor(Integer id, String username, String email, String password, Set<String> roles, Set<String> permissions, Instructor instructor) {
+        super(id, username, email, password, roles, permissions);
         this.instructor = instructor;
     }
 

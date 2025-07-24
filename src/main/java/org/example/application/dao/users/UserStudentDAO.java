@@ -5,17 +5,20 @@ import org.example.application.api.users.UserStudent;
 import org.example.application.repository.users.UserStudentRepository;
 import org.example.db.JdbcHelper;
 import org.example.db.ResultSetMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.NotFoundException;
 import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 public class UserStudentDAO extends UserDAO<UserStudent> implements UserStudentRepository {
+
+    private static final Logger log = LoggerFactory.getLogger(UserStudentDAO.class);
 
     private  class UserMapperWithPassword implements ResultSetMapper<UserStudent> {
 
@@ -26,7 +29,12 @@ public class UserStudentDAO extends UserDAO<UserStudent> implements UserStudentR
             user.setUsername(rs.getString("user_username"));
             user.setEmail(rs.getString("user_email"));
             user.setPassword(rs.getString("user_password"));
-            user.setRoles(new HashSet<>(List.of((String[])rs.getArray("user_roles").getArray())));
+
+            Array userRoles1 = rs.getArray("user_roles");
+
+            String[] userRoles = (String[]) userRoles1.getArray();
+            user.setRoles(new HashSet<>(List.of(userRoles)));
+
             user.setPermissions(new HashSet<>(List.of((String[])  rs.getArray("user_permissions").getArray())));
 //            Array roleArray = rs.getArray("role_names");
 //            if (roleArray != null) {
@@ -51,14 +59,14 @@ public class UserStudentDAO extends UserDAO<UserStudent> implements UserStudentR
             Array roleArray = rs.getArray("user_roles");
             if (roleArray != null) {
                 String[] perms = (String[]) roleArray.getArray();
-                user.setRoles(new HashSet<>(Arrays.asList(perms)));
+                user.setRoles(new HashSet<>(List.of(perms)));
             }
 
             //map permissions
             Array permArray = rs.getArray("user_permissions");
             if (permArray != null) {
                 String[] perms = (String[]) permArray.getArray();
-                user.setPermissions(new HashSet<>(Arrays.asList(perms)));
+                user.setPermissions(new HashSet<>(List.of(perms)));
             }
 
 
@@ -93,7 +101,7 @@ public class UserStudentDAO extends UserDAO<UserStudent> implements UserStudentR
 //        WHERE username = ?;
         String sql = """
                 SELECT * FROM users.get_user_student_login_by_username(?);""";
-        return jdbcHelper.querySingle(sql, USER_MAPPER_WITH_PASSWORD, userStudent.getEmail());
+        return jdbcHelper.querySingle(sql, USER_MAPPER_WITH_PASSWORD, userStudent.getUsername());
 
     }
 
@@ -163,7 +171,6 @@ public class UserStudentDAO extends UserDAO<UserStudent> implements UserStudentR
                 rs -> {
                     UserStudent created = new UserStudent();
                     created.setId(rs.getInt("user_student_id"));
-                    System.out.println(created.getId());
                     return created;
                 },
                 userStudent.getUsername(),
@@ -183,14 +190,14 @@ public class UserStudentDAO extends UserDAO<UserStudent> implements UserStudentR
         String sql="""
         UPDATE users.users u
         SET
-            username = COALESCE(NULLIF($1,?), u.username),
-            email = COALESCE(NULLIF($1,?), u.email),
-            password = COALESCE(NULLIF($1,?), u.password)
+            username = COALESCE(NULLIF(?,''), u.username),
+            email = COALESCE(NULLIF(?,''), u.email),
+            password = COALESCE(NULLIF(?,''), u.password)
         WHERE id = ?;""";
         return jdbcHelper.update(sql,
-                userStudent.getPassword(),
                 userStudent.getUsername(),
                 userStudent.getEmail(),
+                userStudent.getPassword(),
                 userStudent.getId());
     }
 

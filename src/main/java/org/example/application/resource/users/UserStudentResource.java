@@ -40,7 +40,7 @@ public class UserStudentResource {
                 .path("/{id}/dashboard")
                 .resolveTemplate("id", created.getId())
                 .build();
-        String token = JwtUtil.generateToken(userStudent);
+        String token = JwtUtil.generateToken(created);
         return Response
                 .created(location)
                 .entity(Map.of(
@@ -76,6 +76,7 @@ public class UserStudentResource {
         UserStudent toFind= new UserStudent();
         toFind.setId(userId);
         UserStudent foundUserStudent= userStudentService.findById(toFind);
+
         return Response.ok(foundUserStudent).build();
     }
 
@@ -86,12 +87,25 @@ public class UserStudentResource {
     public Response editsUserInfo(@Auth UserAuthenticated userAuthenticated,
                                   @PathParam("id") Integer id,
                                   UserStudent user){
-        if(!id.equals(userAuthenticated.getId()))
-            return Response.status(Response.Status.UNAUTHORIZED).entity(Map.of("Unauthorized access.","You don't have permission to change this user data!")).build();
+
+        if(!id.equals(user.getId())) {
+            String message;
+            message = String.format("User id can not be different that request id. User id: %d, Request id: %d", user.getId(), id);
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(
+                            Map.of("error","Invalid request!",
+                                    "message", message))
+                    .build();
+        }
+        if(!id.equals(userAuthenticated.getId())) {
+            String message = "You don't have permission to change this user data!";
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(Map.of("error","Unauthorized access.","message", message)).build();
+        }
 
         userStudentService.update(user);
 
-        return Response.ok(userAuthenticated).build();
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
 }

@@ -6,6 +6,7 @@ import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.ManagedDataSource;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
+import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.example.application.api.users.UserAuthenticated;
@@ -50,7 +51,12 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
 
     @Override
     public void initialize(Bootstrap<CoursewizConfiguration> bootstrap) {
-
+        bootstrap.addBundle(new MigrationsBundle<CoursewizConfiguration>() {
+            @Override
+            public DataSourceFactory getDataSourceFactory(CoursewizConfiguration configuration) {
+                return configuration.getDataSourceFactory();
+            }
+        });
     }
 
     @Override
@@ -60,6 +66,7 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
 
         // Create and manage the DataSource for you
         final ManagedDataSource dataSource = dataSourceFactory.build(environment.metrics(), "postgresql");
+
         // For JDBC:
         // You can pass dataSource directly to resources that need it
 
@@ -69,19 +76,19 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
         // Register your resource and inject the DataSource
 
 
-        JerseyEnvironment jersey = environment.jersey();
-        registerServices(dataSource,jersey);
-        mapExceptions(jersey);
+    JerseyEnvironment jersey = environment.jersey();
+    registerServices(dataSource,jersey);
+    mapExceptions(jersey);
 
-        Flyway flyway = Flyway.configure()
-                .dataSource(dataSourceFactory.getUrl(), dataSourceFactory.getUser(), dataSourceFactory.getPassword())
-                .schemas("public")
-                .locations("classpath:db/migration")
-                .load();
+    Flyway flyway = Flyway.configure()
+            .dataSource(dataSourceFactory.getUrl(), dataSourceFactory.getUser(), dataSourceFactory.getPassword())
+            .schemas("public")
+            .locations("classpath:db/migrations")
+            .load();
 
-        // Run migrations
+    // Run migrations
         flyway.migrate();
-    }
+}
 
     private static void mapExceptions(JerseyEnvironment jersey) {
         ExceptionMapper exceptions[]={

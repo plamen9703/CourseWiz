@@ -11,13 +11,14 @@ public class CoursewizConfiguration extends Configuration {
 
     @NotNull
     @Valid
-    private DataSourceFactory dataSourceFactory =new DataSourceFactory();
+    @JsonProperty("database")
+    private DataSourceFactory database =new DataSourceFactory();
     @JsonProperty("database")
     public DataSourceFactory getDataSourceFactory() {
-        return dataSourceFactory;
+        return database;
     }
     @JsonProperty("database")
-    public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
-        this.dataSourceFactory = dataSourceFactory;
+    public void setDataSourceFactory(DataSourceFactory database) {
+        this.database = database;
     }
 }

@@ -7,6 +7,8 @@ import org.example.application.repository.users.UserRepository;
 import org.example.application.services.interfaces.users.UserService;
 import org.example.application.services.jwt.JwtUtil;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.NotFoundException;
 import java.util.List;
@@ -44,6 +46,7 @@ public class UserServiceIml<T extends User> implements UserService<T> {
             () -> new RuntimeException("User password can not be empty.");
     private static final Function<String,RuntimeException> USER_INVALID_USERNAME_EXCEPTION =
             username -> new RuntimeException(String.format("Invalid user username! Username: %s", username));
+    private static final Logger log = LoggerFactory.getLogger(UserServiceIml.class);
 
 
     protected final UserRepository<T> userRepository;
@@ -126,7 +129,8 @@ public class UserServiceIml<T extends User> implements UserService<T> {
 
     @Override
     public void update(T user) {
-        if(user.getUsername()==null && user.getPassword()==null && user.getEmail()==null)
+        String password = user.getPassword();
+        if(user.getUsername()==null && password ==null && user.getEmail()==null)
             return;
 
         if (!userRepository.existsById(user))
@@ -138,8 +142,8 @@ public class UserServiceIml<T extends User> implements UserService<T> {
             throw USER_DUPLICATE_ENTITY_EXCEPTION.apply(user.getUsername());
         }
 
-        if(user.getPassword() !=null && !user.getPassword().isEmpty()) {
-            user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+        if(password !=null && !password.isEmpty()) {
+            user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
         }
 
         userRepository.update(user);

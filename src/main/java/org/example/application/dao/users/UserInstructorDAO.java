@@ -104,9 +104,9 @@ public class UserInstructorDAO extends UserDAO<UserInstructor> implements UserIn
         String sql = """
         UPDATE users.users u
         SET
-            username = COALESCE(NULLIF($1,?), u.username),
-            email = COALESCE(NULLIF($1,?), u.email),
-            password = COALESCE(NULLIF($1,?), u.password)
+            username = COALESCE(NULLIF(?,''), u.username),
+            email = COALESCE(NULLIF(?,''), u.email),
+            password = COALESCE(NULLIF(?,''), u.password)
         WHERE id = ?;""";
 
         return jdbcHelper.update(sql,
@@ -131,7 +131,7 @@ public class UserInstructorDAO extends UserDAO<UserInstructor> implements UserIn
     @Override
     public Optional<UserInstructor> findByUsername(UserInstructor userInstructor) {
         String sql = """
-                SELECT * FROM users.get_user_student_login(?);
+                SELECT * FROM users.get_user_student_login_by_username(?);
                 """;
         return jdbcHelper.querySingle(sql, USER_MAPPER_WITH_PASSWORD, userInstructor.getUsername());
     }
@@ -139,9 +139,9 @@ public class UserInstructorDAO extends UserDAO<UserInstructor> implements UserIn
     @Override
     public Optional<UserInstructor> findByEmail(UserInstructor userInstructor) {
         String sql = """
-                SELECT * FROM users.get_user_student_login(null,?);
+                SELECT * FROM users.get_user_login_by_email(?);
                 """;
-        return jdbcHelper.querySingle(sql, USER_MAPPER_WITH_PASSWORD, userInstructor.getUsername());
+        return jdbcHelper.querySingle(sql, USER_MAPPER_WITH_PASSWORD, userInstructor.getEmail());
     }
 
     @Override

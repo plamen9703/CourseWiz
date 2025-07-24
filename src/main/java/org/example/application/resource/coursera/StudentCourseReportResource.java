@@ -16,7 +16,7 @@ import java.util.List;
 
 @Path("/reports")
 @Produces("text/csv")
-@RolesAllowed({"course-admin", "instructor-admin","student-admin"})
+@RolesAllowed({"course-admin", "instructor-admin","student-admin", "instructor"})
 public class StudentCourseReportResource {
     private final StudentCourseReportService studentCourseReportService;
 

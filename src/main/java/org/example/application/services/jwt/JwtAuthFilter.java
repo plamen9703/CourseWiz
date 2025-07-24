@@ -63,7 +63,8 @@ public class JwtAuthFilter extends AuthFilter<String, UserAuthenticated> {
 
 // If method has @Auth OR @RolesAllowed, we require JWT
         boolean requiresAuth = hasAuthAnnotation
-                               || resourceInfo.getResourceMethod().isAnnotationPresent(RolesAllowed.class);
+                               || resourceInfo.getResourceMethod().isAnnotationPresent(RolesAllowed.class)
+                                ||resourceInfo.getResourceClass().isAnnotationPresent(RolesAllowed.class);
 
         if (!requiresAuth) {
             return; // No auth required
@@ -84,7 +85,11 @@ public class JwtAuthFilter extends AuthFilter<String, UserAuthenticated> {
             userAuthenticated = JWT_AUTHENTICATOR.authenticate(token)
                     .orElseThrow(() -> new UserTokenInvalidException("User token is invalid!"));
         } catch (AuthenticationException e) {
-            throw new RuntimeException(e);
+//            throw new RuntimeException(e);
+            containerRequestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(Map.of("message", "Authentication failed"))
+                    .build());
+            return;
         }
 
         boolean secure = containerRequestContext.getSecurityContext().isSecure();
@@ -136,7 +141,10 @@ public class JwtAuthFilter extends AuthFilter<String, UserAuthenticated> {
     }
 
     private boolean hashAuthAnotation() {
-        return Arrays.stream(resourceInfo.getResourceMethod().getParameters()).anyMatch(p->p.isAnnotationPresent(Auth.class));
+        return resourceInfo.getResourceMethod().isAnnotationPresent(Auth.class)
+                || resourceInfo.getResourceClass().isAnnotationPresent(Auth.class)
+                || Arrays.stream(resourceInfo.getResourceMethod().getParameters())
+                .anyMatch(p -> p.isAnnotationPresent(Auth.class));
     }
 
 }

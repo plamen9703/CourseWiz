@@ -1,0 +1,20 @@
+[
+  {
+    "username": "Alice",
+    "email": "alice@example.com",
+    "password": "alice123",
+    "student": {
+      "firstName": "Alice",
+      "lastName": "Alison"
+    }
+  },
+  {
+    "username": "plamen",
+    "email": "hristov@gmail.com",
+    "password":"plamen456",
+    "student": {
+      "firstName": "Plamen",
+      "lastName": "Hristov"
+    }
+  }
+]

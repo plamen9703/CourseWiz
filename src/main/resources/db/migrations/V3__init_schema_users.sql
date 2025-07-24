@@ -14,40 +14,40 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Roles Table
-CREATE TABLE roles (
+CREATE TABLE IF NOT EXISTS roles (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL
 );
 
 -- Permissions Table
-CREATE TABLE permissions (
+CREATE TABLE IF NOT EXISTS permissions (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
 
 -- User Roles (Many-to-Many)
-CREATE TABLE user_roles (
+CREATE TABLE IF NOT EXISTS user_roles (
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     role_id INT NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, role_id)
 );
 
 -- Role Permissions (Many-to-Many)
-CREATE TABLE role_permissions (
+CREATE TABLE IF NOT EXISTS role_permissions (
     role_id INT NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
     permission_id INT NOT NULL REFERENCES permissions(id) ON DELETE CASCADE,
     PRIMARY KEY (role_id, permission_id)
 );
 
 -- User Permissions (Direct permissions)
-CREATE TABLE user_permissions (
+CREATE TABLE IF NOT EXISTS user_permissions (
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     permission_id INT NOT NULL REFERENCES permissions(id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, permission_id)
 );
 
 -- User Profile (Link to Coursera)
-CREATE TABLE user_profile (
+CREATE TABLE IF NOT EXISTS user_profile (
     user_id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
     student_pin VARCHAR(10) REFERENCES coursera.students(pin) ON DELETE CASCADE,
     instructor_id INT REFERENCES coursera.instructors(id) ON DELETE CASCADE,
@@ -59,9 +59,9 @@ CREATE TABLE user_profile (
 );
 
 -- Indexes for Performance
-CREATE INDEX idx_user_roles_user ON user_roles(user_id);
-CREATE INDEX idx_user_roles_role ON user_roles(role_id);
-CREATE INDEX idx_role_permissions_role ON role_permissions(role_id);
-CREATE INDEX idx_role_permissions_permission ON role_permissions(permission_id);
-CREATE INDEX idx_user_permissions_user ON user_permissions(user_id);
-CREATE INDEX idx_user_permissions_permission ON user_permissions(permission_id);
+CREATE  INDEX IF NOT EXISTS idx_user_roles_user ON user_roles(user_id);
+CREATE  INDEX IF NOT EXISTS idx_user_roles_role ON user_roles(role_id);
+CREATE  INDEX IF NOT EXISTS idx_role_permissions_role ON role_permissions(role_id);
+CREATE  INDEX IF NOT EXISTS idx_role_permissions_permission ON role_permissions(permission_id);
+CREATE  INDEX IF NOT EXISTS idx_user_permissions_user ON user_permissions(user_id);
+CREATE  INDEX IF NOT EXISTS idx_user_permissions_permission ON user_permissions(permission_id);
