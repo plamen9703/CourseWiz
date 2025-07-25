@@ -1,6 +1,7 @@
 package org.example.application.resource.coursera;
 
 import org.example.application.api.coursera.StudentCourse;
+import org.example.application.api.coursera.StudentCourseStatus;
 import org.example.application.services.interfaces.coursera.StudentCourseService;
 
 import javax.annotation.security.RolesAllowed;
@@ -75,9 +76,19 @@ public class StudentCourseResource {
         return Response.noContent().build();
     }
 
+    @RolesAllowed({"instructor-admin","instructor", "student-admin"})
     @DELETE
     public Response delete(StudentCourse studentCourse){
         studentCoursestudentCourseService.delete(studentCourse);
         return Response.noContent().build();
     }
+
+    @GET
+    @Path("enrolled")
+    @RolesAllowed("instructor")
+    public Response getStudentsEnrolledInCourse(@QueryParam("courseId") Integer courseId){
+        List<StudentCourseStatus> enrolledStudents = studentCoursestudentCourseService.getEnrolledStudents(courseId);
+        return Response.ok(enrolledStudents).build();
+    }
+
 }

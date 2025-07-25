@@ -6,19 +6,20 @@
 
     <groupId>org.example</groupId>
     <artifactId>CourseWiz</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT-shaded</version>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
-            <version>2.1.12</version>
+            <version>${dropwizard-version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.dropwizard/dropwizard-migrations -->
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-migrations</artifactId>
-            <version>2.1.12</version>
+            <version>${dropwizard-version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -47,36 +48,36 @@
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-testing</artifactId>
-            <version>2.1.12</version>
+            <version>${dropwizard-version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>11.10.0</version>
+            <version>${flyway-version}</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
-            <version>11.10.0</version>
+            <version>${flyway-version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-db</artifactId>
-            <version>2.1.12</version>
+            <version>${dropwizard-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>5.4.1</version>
+            <version>${apache-poi-version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.4.1</version>
+            <version>${apache-poi-version}</version>
         </dependency>
         <dependency>
             <groupId>org.mindrot</groupId>
@@ -87,24 +88,24 @@
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-auth</artifactId>
-            <version>2.1.12</version>
+            <version>${dropwizard-version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.12.6</version>
+            <version>${jwt-version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.12.6</version>
+            <version>${jwt-version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.12.6</version>
+            <version>${jwt-version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -137,14 +138,14 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.7.2</version>
+            <version>${juint-version}</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.7.2</version>
+            <version>${juint-version}</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.test-framework.providers/jersey-test-framework-provider-grizzly2 -->
@@ -172,8 +173,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>15</source>
-                    <target>15</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -185,21 +186,24 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.8</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
+                        <phase>package</phase>
                         <goals>
-                            <goal>prepare-agent</goal>
+                            <goal>shade</goal>
                         </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.example.CoursewizApplication</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -208,9 +212,40 @@
 
 
     <properties>
-        <maven.compiler.source>24</maven.compiler.source>
-        <maven.compiler.target>24</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dropwizard-version>2.1.12</dropwizard-version>
+        <flyway-version>11.10.0</flyway-version>
+        <apache-poi-version>5.4.1</apache-poi-version>
+        <jwt-version>0.12.6</jwt-version>
+        <juint-version>5.7.2</juint-version>
     </properties>
+    <developers>
+        <developer>
+            <id>1</id>
+            <name>Plamen Hristov</name>
+            <email>hristovplamen9703@gmail.com</email>
+            <organization>haemimont</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
 
+    <description>
+        CourseWiz is a Dropwizard based application that uses PostgreSQL as backend database and Flyway for migrations.
+        It was developed entirely by me in the span of 2 weeks as an introduction to becoming a java developer.
+
+        The application is simulates Coursera where Students can be enrolled in a Course that has an Instructor.
+        The courses have a certain amount of credits they give once a student has completed a course.
+        A report can be made of students that have completed a course filtering by:
+        * their Student pin [Optional]
+        * the minimal required total amount of credits from completed courses [Optional]
+        * a period of start and end date of when a course was completed [Optional]
+        The report is in mind of knowing what "benefits" should a student have from completed courses.
+
+        The app offers User support with a custom jwt authentication filter for User who are Students and Instructors.
+        They can both register, login, view their dashboards (with some limitations) edit their logins and Instructors can generate the required report.
+    </description>
 </project>

@@ -1,7 +1,10 @@
 package org.example.application.services.implementations.coursera;
 
+import org.example.application.api.coursera.Course;
 import org.example.application.api.coursera.StudentCourse;
+import org.example.application.api.coursera.StudentCourseStatus;
 import org.example.application.exceptions.DuplicateEntityException;
+import org.example.application.repository.coursera.CourseRepository;
 import org.example.application.repository.coursera.StudentCourseRepository;
 import org.example.application.services.interfaces.coursera.StudentCourseService;
 
@@ -12,6 +15,9 @@ import java.util.function.Function;
 public class StudentCourseServiceImpl implements StudentCourseService {
 
     private final StudentCourseRepository studentCourseRepository;
+
+    private final CourseRepository courseRepository;
+
 
     private static final Function<StudentCourse, NotFoundException> STUDENT_COURSE_NOT_FOUND_EXCEPTION =
             studentCourse -> new NotFoundException(
@@ -31,8 +37,9 @@ public class StudentCourseServiceImpl implements StudentCourseService {
                     )
             );
 
-    public StudentCourseServiceImpl( StudentCourseRepository studentCourseRepository) {
+    public StudentCourseServiceImpl(StudentCourseRepository studentCourseRepository, CourseRepository courseRepository) {
         this.studentCourseRepository = studentCourseRepository;
+        this.courseRepository = courseRepository;
     }
 
     @Override
@@ -77,4 +84,14 @@ public class StudentCourseServiceImpl implements StudentCourseService {
         return studentCourseRepository.existsById(studentCourse);
     }
 
+    @Override
+    public List<StudentCourseStatus> getEnrolledStudents(Integer courseId) {
+        Course course = new Course();
+        course.setId(courseId);
+        if(!courseRepository.existsById(course)){
+            throw new NotFoundException("Course with the provided id not found! ID: %d".formatted(courseId));
+        }
+
+        return studentCourseRepository.getEnrolledStudents(courseId);
+    }
 }

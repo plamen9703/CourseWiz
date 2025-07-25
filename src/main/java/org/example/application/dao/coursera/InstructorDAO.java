@@ -37,7 +37,7 @@ public class InstructorDAO implements InstructorRepository {
 
     @Override
     public Instructor insert(Instructor instructor) {
-        String sql="INSERT INTO coursera.instructors(first_name, last_name) VALUES (?, ?);";
+        String sql="INSERT INTO coursera.instructors(first_name, last_name) VALUES (?, ?) RETURNING id, first_name, last_name, time_created;";
         return jdbcHelper.insert(sql,INSTRUCTOR_RESULT_SET_MAPPER, instructor.getFirstName(),instructor.getLastName());
     }
 

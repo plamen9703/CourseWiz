@@ -68,7 +68,7 @@ public class JdbcHelperImpl implements JdbcHelper{
     public <T> T insert(String sql, ResultSetMapper<T> keyMapper, Object... params) {
         try (
                 Connection conn = dataSource.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+                PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
             conn.setAutoCommit(false);
             setParams(stmt, params);

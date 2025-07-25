@@ -44,12 +44,13 @@ public class StudentDAO  implements StudentRepository {
 
     @Override
     public Student insert(Student student) {
-        String sql="INSERT INTO coursera.students(first_name, last_name, time_created) VALUES ( ?, ?, COALESCE(?, CURRENT_TIMESTAMP));";
+        String sql= """
+                INSERT INTO coursera.students(first_name, last_name) VALUES (?, ?) RETURNING pin, first_name, last_name, time_created;
+                """;
         return jdbcHelper.insert(sql,
                 STUDENT_RESULT_SET_MAPPER,
                 student.getFirstName(),
-                student.getLastName(),
-                student.getTimeCreated());
+                student.getLastName());
     }
 
     @Override

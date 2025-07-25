@@ -6,13 +6,9 @@ database:
   driverClass: org.postgresql.Driver
   user: coursewizmanager
   password: coursewiz123
-  url: jdbc:postgresql://host.docker.internal:5432/coursera
+  url: jdbc:postgresql://localhost:5432/coursera
   maxSize: 10
 logging:
   level: INFO
   appenders:
     - type: console
-#  properties:
-#    hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-#    hibernate.hbm2ddl.auto: update
-#

@@ -48,12 +48,12 @@ public class StudentResource {
 
     @POST
     @Path("/batch")
-    @RolesAllowed({"student-admin", "course-admin"})
+    @RolesAllowed({"student-admin", "course-admin", "instructor"})
     public Response saveAll(List<Student> students, @Context UriInfo uriInfo){
         List<URI> locations=new ArrayList<>();
         for (Student student: students){
             Student created = studentService.create(student);
-            URI location=uriInfo.getAbsolutePathBuilder().path(created.getPin()).build();
+            URI location=UriBuilder.fromResource(StudentResource.class).path(created.getPin()).build();
             locations.add(location);
         }
         return Response
@@ -74,11 +74,8 @@ public class StudentResource {
 
     @PUT // do I replace it with patch ????
     @RolesAllowed({"student-admin", "student"})
-    public Response update(@Context SecurityContext securityContext , Student student){
+    public Response update(Student student){
         studentService.update(student);
-
-        // TEST: test if student has changed
-        System.out.println(studentService.findById(student));
         return Response.noContent().build();
     }
 

@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.CoursewizApplication;
 import org.example.CoursewizConfiguration;
+import org.example.application.api.coursera.Student;
 import org.example.application.api.users.User;
 import org.example.application.api.users.UserInstructor;
 import org.flywaydb.core.Flyway;
@@ -224,5 +225,48 @@ public class UserInstructorTest {
             assertThat(headerRow.getCell(1).getStringCellValue()).isEqualTo("Total Credit");
         }
     }
+
+
+    @Test
+    @Order(6)
+    void enrollStudents(){
+        try {
+            List<Student> students = MAPPER.readValue(getClass().getResource("/fixtures/students.json"), new TypeReference<List<Student>>() {});
+
+            try (Response response = client
+                    .target("http://localhost:%d/students/batch".formatted(localPort))
+                    .request()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(userJwtToken))
+                    .post(Entity.json(students))) {
+                assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
+                List<URI> uris = response.readEntity(new GenericType<List<URI>>() {});
+                assertEquals(2, uris.size());
+                boolean stu00000 = uris.stream().allMatch(uri -> uri.toString().contains("STU00000"));
+                assertTrue(stu00000);
+            }
+        } catch (IOException e) {
+            log.info(e.getMessage());
+        }
+    }
+
+
+
+    @Test
+    @Order(7)
+    void getEnrolledStudents(){
+        Integer courseId = 1;
+        int expected = 2;
+        Response response = client
+                .target("http://localhost:%d/students-courses/enrolled".formatted(localPort))
+                .queryParam("courseId", courseId)
+                .request()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(userJwtToken))
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        List<Student> students = response.readEntity(new GenericType<List<Student>>() {});
+        assertEquals( expected, students.size());
+    }
+
+
 
 }

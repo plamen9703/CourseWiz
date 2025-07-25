@@ -46,7 +46,7 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
     private static final Logger log= LoggerFactory.getLogger(CoursewizApplication.class);
 
     public static void main(String[] args) throws Exception {
-        new CoursewizApplication().run("server", "config.yml");
+        new CoursewizApplication().run(args);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class CoursewizApplication extends Application<CoursewizConfiguration> {
         CourseService courseService = new CourseServiceImpl(courseRepository, instructorRepository);
         InstructorService instructorService = new InstructorServiceImpl(instructorRepository);
         StudentService studentService = new StudentServiceImpl(studentRepository);
-        StudentCourseService studentCourseService = new StudentCourseServiceImpl( studentCourseRepository);
+        StudentCourseService studentCourseService = new StudentCourseServiceImpl( studentCourseRepository, courseRepository);
         StudentCourseReportService studentCourseReportService=new StudentCourseReportServiceImpl(studentCourseReportRepository, studentRepository);
 
         //users

@@ -1,6 +1,7 @@
 package org.example.application.services.implementations.coursera;
 
 import org.example.application.api.coursera.StudentCourse;
+import org.example.application.dao.coursera.CourseDAO;
 import org.example.application.dao.coursera.StudentCourseDAO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +17,12 @@ class StudentCourseServiceImplTest {
 
     private final StudentCourseDAO studentCourseDAO=mock(StudentCourseDAO.class);
     private StudentCourseServiceImpl studentCourseService;
+    private final CourseDAO courseDAO = mock(CourseDAO.class);
+
 
     @BeforeEach
     void setUp() {
-        studentCourseService=new StudentCourseServiceImpl(studentCourseDAO);
+        studentCourseService=new StudentCourseServiceImpl(studentCourseDAO, courseDAO);
     }
 
     @AfterEach

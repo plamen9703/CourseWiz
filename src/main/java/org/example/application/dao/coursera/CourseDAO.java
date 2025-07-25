@@ -41,7 +41,9 @@ public class CourseDAO implements CourseRepository {
 
     @Override
     public Course insert(Course course) {
-        String sql = "INSERT INTO coursera.courses(name, instructor_id, total_time, credit) VALUES (?, ?, ?, ?);";
+        String sql = """
+        INSERT INTO coursera.courses(name, instructor_id, total_time, credit) VALUES (?, ?, ?, ?)
+        RETURNING id, name, instructor_id, total_time, credit, time_created;""";
         return jdbcHelper.insert(sql,
                 COURSE_RESULT_SET_MAPPER,
                 course.getName(),

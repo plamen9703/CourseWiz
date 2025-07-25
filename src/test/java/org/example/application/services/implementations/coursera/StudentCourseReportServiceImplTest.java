@@ -182,21 +182,21 @@ class StudentCourseReportServiceImplTest {
         Sheet sheet = wb.getSheet("Student Report");
 
         // Validate Student Header Row
-        Row headerRow = sheet.getRow(1);
+        Row headerRow = sheet.getRow(0);
         assertEquals("Student Name", headerRow.getCell(0).getStringCellValue());
         assertEquals("Total Credit", headerRow.getCell(1).getStringCellValue());
 
         // Validate Student Data Row
-        Row studentRow = sheet.getRow(2);
+        Row studentRow = sheet.getRow(1);
         assertEquals("John Doe", studentRow.getCell(0).getStringCellValue());
         assertEquals(10, studentRow.getCell(1).getNumericCellValue());
 
         // Validate Course Header Row
-        Row courseHeader = sheet.getRow(3);
+        Row courseHeader = sheet.getRow(2);
         assertEquals("Completed", courseHeader.getCell(0).getStringCellValue());
 
         // Validate Course Data Row
-        Row courseRow = sheet.getRow(4);
+        Row courseRow = sheet.getRow(3);
         assertEquals("-->", courseRow.getCell(0).getStringCellValue());
         assertEquals("Math", courseRow.getCell(1).getStringCellValue());
         assertEquals(5, courseRow.getCell(2).getNumericCellValue());
@@ -230,10 +230,10 @@ class StudentCourseReportServiceImplTest {
         Sheet sheet = wb.getSheet("Student Report");
 
         // Student header should appear only once
-        assertEquals("Student Name", sheet.getRow(1).getCell(0).getStringCellValue());
+        assertEquals("Student Name", sheet.getRow(0).getCell(0).getStringCellValue());
         // Validate that both courses are listed
-        assertEquals("Math", sheet.getRow(4).getCell(1).getStringCellValue());
-        assertEquals("Physics", sheet.getRow(5).getCell(1).getStringCellValue());
+        assertEquals("Math", sheet.getRow(3).getCell(1).getStringCellValue());
+        assertEquals("Physics", sheet.getRow(4).getCell(1).getStringCellValue());
 
         wb.close();
     }
@@ -264,8 +264,8 @@ class StudentCourseReportServiceImplTest {
         Sheet sheet = wb.getSheet("Student Report");
 
         // Check both students exist
-        assertTrue(sheet.getRow(2).getCell(0).getStringCellValue().equals("John Doe"));
-        assertTrue(sheet.getRow(6).getCell(0).getStringCellValue().equals("Jane Smith"));
+        assertTrue(sheet.getRow(1).getCell(0).getStringCellValue().equals("John Doe"));
+        assertTrue(sheet.getRow(5).getCell(0).getStringCellValue().equals("Jane Smith"));
 
         wb.close();
     }
